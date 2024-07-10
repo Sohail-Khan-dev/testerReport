@@ -25,6 +25,8 @@ return new class extends Migration
             $table->integer('mobile_testing')->nullable();
             $table->string('description')->nullable();
             $table->string('other')->nullable()->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('created_at')->nullable();
         });
     }
 
