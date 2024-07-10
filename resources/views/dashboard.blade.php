@@ -8,6 +8,21 @@
             padding: .5rem;
             flex: 0 0 auto;
             width: 50%;
+            margin-bottom: .5rem !important;
+        }
+        .form-group-checkbox{
+            align-items: center;
+            justify-content: end;
+            display: flex;
+            flex-flow: column;
+            padding: .5rem;
+            /* flex: 0 0 auto; */
+            width: 50%;
+            margin-bottom: .5rem !important;
+        }
+        label{
+            font-weight: 600;
+            text-align: center;
         }
     </style>
     <x-slot name="header">
@@ -85,39 +100,40 @@
                     <input type="number" class="form-control" id="bug_reported" name="bug_reported">
                 </div>
                 <div class="form-group">
-                    <label for="regression">Regression</label>
+                    <label for="other">Other</label>
+                    <input type="text" class="form-control" id="other" name="other">
+                </div>
+
+            </div>
+            <div class="d-flex justify-between align-items-center flex-row">
+                <div class="form-group-checkbox">
+                    <label for="regression">Regression testing</label>
                     <input type="checkbox" id="regression" name="regression" value="1">
                 </div>
-            </div>
-            <div class="d-flex justify-between align-items-center">
-                <div class="form-group">
+                <div class="form-group-checkbox">
                     <label for="smoke_testing">Smoke Testing</label>
                     <input type="checkbox" id="smoke_testing" name="smoke_testing" value="1">
                 </div>
-                <div class="form-group">
+                <div class="form-group-checkbox">
                     <label for="client_meeting">Client Meeting</label>
                     <input type="checkbox" id="client_meeting" name="client_meeting" value="1">
                 </div>
-            </div>
-            <div class="d-flex justify-between align-items-center">
-                <div class="form-group">
+           
+                <div class="form-group-checkbox">
                     <label for="daily_meeting">Daily Meeting</label>
                     <input type="checkbox" id="daily_meeting" name="daily_meeting" value="1">
                 </div>
-                <div class="form-group">
+                <div class="form-group-checkbox">
                     <label for="mobile_testing">Mobile Testing</label>
                     <input type="checkbox" id="mobile_testing" name="mobile_testing" value="1">
                 </div>
             </div>
-            <div class="d-flex justify-between align-items-center">
-                <div class="form-group">
+            <div class="">
+                <div class="form-group w-100">
                     <label for="description">Description</label>
-                    <input type="text" class="form-control" id="description" name="description">
+                    <textarea  type="text" class="form-control" id="description" rows="3"> </textarea>
                 </div>
-                <div class="form-group">
-                    <label for="other">Other</label>
-                    <input type="text" class="form-control" id="other" name="other">
-                </div>
+               
             </div>
       </div>
       <div class="modal-footer">
