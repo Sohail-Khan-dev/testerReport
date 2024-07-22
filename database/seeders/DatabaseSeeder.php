@@ -20,19 +20,19 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Zubair Khan',
             'email' => 'test@example.com',
-            'password' => Hash::make('123456789'), // Hash the password
+            'password' => Hash::make('$2a$12$MMzdXpFc/iiI6e2vB3Y7x.RnPosmBzBrA5bZegPeznHOAb15RZPtm'), // Hash the password
         ]);
 
         User::factory()->create([
             'name' => 'Khan',
             'email' => 'khan@email.com',
-            'password' => Hash::make('123456789'),
+            'password' => Hash::make('$2a$12$MMzdXpFc/iiI6e2vB3Y7x.RnPosmBzBrA5bZegPeznHOAb15RZPtm'),
         ]);
 
         User::factory()->create([
             'name' => 'Ali',
             'email' => 'ali@email.com',
-            'password' => Hash::make('123456789'),
+            'password' => Hash::make('$2a$12$MMzdXpFc/iiI6e2vB3Y7x.RnPosmBzBrA5bZegPeznHOAb15RZPtm'),
         ]);
         Project::factory()->create([
             'name' => 'Un roads'
