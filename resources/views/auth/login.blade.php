@@ -43,4 +43,5 @@
             </x-primary-button>
         </div>
     </form>
+    @dump('test')
 </x-guest-layout>
