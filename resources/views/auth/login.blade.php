@@ -1,10 +1,12 @@
 <x-guest-layout>
-    @dd('this is the login')
+    @dump('this is the login top')
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
+    @dump('this is after auth-session-status login')
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
+        @dump('this is after form login')
 
         <!-- Email Address -->
         <div>
@@ -39,6 +41,7 @@
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
+            @dd('this is end of  form login')
 
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}
