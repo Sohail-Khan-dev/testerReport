@@ -1,4 +1,5 @@
 <x-guest-layout>
+    @dd('this is the login')
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
