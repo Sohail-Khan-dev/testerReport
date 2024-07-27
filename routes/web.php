@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserReportController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,6 +14,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('register/new', [RegisteredUserController::class, 'create'])
+    ->name('register.new');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -29,3 +31,14 @@ Route::get('test',function(){
 });
 
 require __DIR__.'/auth.php';
+
+
+Route::get('/layout',function(){
+    
+        return view('tabler.layout-vertical-1');
+        return view('tabler.layout-vertical');
+    
+});
+Route::get('/modal',function(){
+    return view('tabler.modals');
+});
