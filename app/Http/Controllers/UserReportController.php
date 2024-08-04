@@ -12,77 +12,66 @@ class UserReportController extends Controller
 {
     //
     public function store(Request $request){
-        // dd($request);
+
+        if(auth()->user()->role == 'user'){
+            $request['user_id'] = auth()->user()->id ;
+        }
         $validatedData = $request->validate([
             'user_id' => 'required|not_in:None',
             'project_id' => 'required',
             'date' => 'required|date'
         ]);
-       $report =  UserReport::create([
-            'user_id' => $request->input('user_id'),
-            'project_id' => $request->input('project_id'),
-            'date' => $request->input('date'),
-            'task_tested' => $request->input('task_tested'),
-            'bug_reported' => $request->input('bug_reported'),
-            'other' => $request->input('other'),
-            'regression' => $request->input('regression'),
-            'smoke_testing' => $request->input('smoke_testing'),
-            'client_meeting' => $request->input('client_meeting'),
-            'daily_meeting' => $request->input('daily_meeting'),
-            'mobile_testing' => $request->input('mobile_testing'),
-            'description' => $request->input('description'),
-        ]);
-        // $reports = $this->showReports();
-        return redirect()->route('reporting');
-
+        if($validatedData){
+            $report =  UserReport::create([
+                    'user_id' => $request->input('user_id'),
+                    'project_id' => $request->input('project_id'),
+                    'date' => $request->input('date'),
+                    'task_tested' => $request->input('task_tested'),
+                    'bug_reported' => $request->input('bug_reported'),
+                    'other' => $request->input('other'),
+                    'regression' => $request->input('regression'),
+                    'smoke_testing' => $request->input('smoke_testing'),
+                    'client_meeting' => $request->input('client_meeting'),
+                    'daily_meeting' => $request->input('daily_meeting'),
+                    'mobile_testing' => $request->input('mobile_testing'),
+                    'description' => $request->input('description'),
+                ]);
+            return redirect()->route('reporting');
+        }
+        else{
+            return response()->json([
+                'success' => false,
+                'errors' => $validatedData->errors()
+            ], 422);
+        }
     }
     public function index(){
         $users = User::all();
         $projects = Project::all();
-        return view('reporting',compact(['users','projects']));
+        return view('qareport.reporting',compact(['users','projects']));
     }
 
     public function getData()
     {
-        $reports = UserReport::with(['user', 'project']);
+        $reports = UserReport::with(['user', 'project'])->select(['date','user_id','project_id','task_tested','bug_reported','regression','smoke_testing','client_meeting',
+                                    'daily_meeting','mobile_testing','other','description']);
 
         return DataTables::of($reports)
-            ->addColumn('date',function($report){
-                return $report->date;
-            })
+        ->filterColumn('user_name', function($query, $keyword) {
+            $query->whereHas('user', function($query) use ($keyword) {
+                $query->where('name', 'like', "%{$keyword}%");
+            });
+        })
+        ->filterColumn('project_name', function($query, $keyword) {
+            $query->whereHas('project', function($query) use ($keyword) {
+                $query->where('name', 'like', "%{$keyword}%");
+            });
+        })
             ->addColumn('user_name', function($report) {
                 return $report->user->name;
             })
             ->addColumn('project_name', function($report) {
                 return $report->project->name;
-            })
-            ->addColumn('tasks', function($report) {
-                return $report->task_tested;
-            })
-            ->addColumn('bugs', function($report) {
-                return $report->bug_reported;
-            })
-            ->addColumn('regressions', function($report) {
-                return $report->regression;
-            })
-            ->addColumn('smokes', function($report) {
-                return $report->smoke_testing;
-            })
-            ->addColumn('client_meetings', function($report) {
-                return $report->client_meeting;
-            })
-            ->addColumn('daily_meeting', function($report) {
-                return $report->daily_meeting;
-            })
-            ->addColumn('mobiles', function($report) {
-                return $report->mobile_testing;
-            })
-            ->addColumn('other', function($report) {
-                return $report->other;
-            })
-            ->addColumn('description', function($report) {
-                // dump($report->description);
-                return $report->description ?? 'No description';
             })
             ->make(true);
     }

@@ -40,9 +40,10 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role
         ]);
 
-        event(new Registered($user));
+        event(new Registered($user));   // this call an event whcih make the the user $this->user i.e current login User 
 
         Auth::login($user);
 
@@ -50,11 +51,27 @@ class RegisteredUserController extends Controller
     }
 
     public function storeNew(Request $request){
+        if($request['role'] == null){
+            $request['role'] = 'admin';
+        }
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-        dd($request->all());
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+        ]);
+      return redirect()->route('users');
+    }
+    public function index(){
+        return view('qareport.user');
+    }
+    public function getAllUser(){
+        $users = User::select(['name','email','role']);
+        return datatables($users)->make(true);
     }
 }

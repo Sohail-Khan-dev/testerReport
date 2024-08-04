@@ -1,0 +1,27 @@
+
+.form-group {
+  align-items: center;
+  justify-content: end;
+  display: flex;
+  flex-flow: column;
+  padding: .5rem;
+  flex: 0 0 auto;
+  width: 50%;
+  margin-bottom: .5rem !important;
+}
+
+.form-group-checkbox {
+  align-items: center;
+  justify-content: end;
+  display: flex;
+  flex-flow: column;
+  padding: .5rem;
+  /* flex: 0 0 auto; */
+  width: 50%;
+  margin-bottom: .5rem !important;
+}
+
+label {
+  font-weight: 600;
+  text-align: center;
+}

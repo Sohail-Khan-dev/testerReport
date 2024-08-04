@@ -21,18 +21,21 @@ class DatabaseSeeder extends Seeder
             'name' => 'Zubair Khan',
             'email' => 'test@example.com',
             'password' => Hash::make('$2a$12$MMzdXpFc/iiI6e2vB3Y7x.RnPosmBzBrA5bZegPeznHOAb15RZPtm'), // Hash the password
+            'role' => 'admin'
         ]);
 
         User::factory()->create([
             'name' => 'Khan',
             'email' => 'khan@email.com',
             'password' => Hash::make('$2a$12$MMzdXpFc/iiI6e2vB3Y7x.RnPosmBzBrA5bZegPeznHOAb15RZPtm'),
+            'role' => 'user'
         ]);
 
         User::factory()->create([
             'name' => 'Ali',
             'email' => 'ali@email.com',
             'password' => Hash::make('$2a$12$MMzdXpFc/iiI6e2vB3Y7x.RnPosmBzBrA5bZegPeznHOAb15RZPtm'),
+            'role' => 'manager'
         ]);
         Project::factory()->create([
             'name' => 'Un roads'

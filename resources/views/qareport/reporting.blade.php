@@ -1,37 +1,8 @@
 <x-app-layout>
     <style>
-        .form-group {
-            align-items: center;
-            justify-content: end;
-            display: flex;
-            flex-flow: column;
-            padding: .5rem;
-            flex: 0 0 auto;
-            width: 50%;
-            margin-bottom: .5rem !important;
-        }
 
-        .form-group-checkbox {
-            align-items: center;
-            justify-content: end;
-            display: flex;
-            flex-flow: column;
-            padding: .5rem;
-            /* flex: 0 0 auto; */
-            width: 50%;
-            margin-bottom: .5rem !important;
-        }
-
-        label {
-            font-weight: 600;
-            text-align: center;
-        }
     </style>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Reporting') }}
-        </h2>
-    </x-slot>
+
 
     <div class="py-12">
         <div class="px-4">
@@ -77,6 +48,9 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </tfoot>
                 </div>
@@ -96,7 +70,12 @@
                 <div class="modal-body">
                     <form action="{{ route('user-reports.store') }}" method="POST">
                         @csrf
-                        <div class="d-flex justify-between align-items-center">
+                        <div class="row row-cols-2">
+                            @if(auth()->user()->role != 'admin' || auth()->user()->role != 'manager')
+                            <div class="form-group ">
+                                <label for="user_id">Name</label>
+                                <input type="text" readonly value="  {{ auth()->user()->name}} ">
+                            @else
                             <div class="form-group ">
                                 <label for="user_id">Select Employee</label>
                                 <select class="form-control" id="user_id" name="user_id">
@@ -105,7 +84,15 @@
                                     <option value="{{$user->id}}">{{$user->name}}</option>
                                     @endforeach
                                 </select>
+                            @endif
                             </div>
+                            <div class="form-group">
+                                <label for="date">Date</label>
+                                <input type="date" class="form-control" id="date" name="date" value="{{ date('Y-m-d') }}" readonly>
+                            </div>
+                        <!-- </div> -->
+                        <!-- <div class="d-flex justify-between align-items-center"> -->
+                           
                             <div class="form-group">
                                 <label for="project_id">Select Project</label>
                                 <select class="form-control" id="project_id" name="project_id">
@@ -115,18 +102,12 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <div class="d-flex justify-between align-items-center">
-                            <div class="form-group">
-                                <label for="date">Date</label>
-                                <input type="date" class="form-control" id="date" name="date" required>
-                            </div>
                             <div class="form-group">
                                 <label for="task_tested">Task Tested</label>
                                 <input type="number" class="form-control" id="task_tested" name="task_tested">
                             </div>
-                        </div>
-                        <div class="d-flex justify-between align-items-center">
+                        <!-- </div> -->
+                        <!-- <div class="d-flex justify-between align-items-center"> -->
                             <div class="form-group">
                                 <label for="bug_reported">Bug Reported</label>
                                 <input type="number" class="form-control" id="bug_reported" name="bug_reported">
@@ -163,7 +144,7 @@
                         <div class="">
                             <div class="form-group w-100">
                                 <label for="description">Description</label>
-                                <textarea type="text" class="form-control" id="description" rows="3"> </textarea>
+                                <textarea type="text" class="form-control" id="description" name='description' rows="3"> </textarea>
                             </div>
 
                         </div>
@@ -182,66 +163,36 @@
         $('#reports-table').DataTable({
             processing: true,
             serverSide: true,
+            dom : 'rtflp',
+            scrollX:true,
+            scrollY: 100,
             ajax: '{{ route("reports.data") }}',
-            columns: [{
-                    data: 'date',
-                    name: 'date'
-                },
-                {
-                    data: 'user_name',
-                    name: 'user_name'
-                },
-                {
-                    data: 'project_name',
-                    name: 'project_name'
-                },
-                {
-                    data: 'tasks',
-                    name: 'tasks'
-                },
-                {
-                    data: 'bugs',
-                    name: 'bugs'
-                },
-                {
-                    data: 'regressions',
-                    name: 'regressions'
-                },
-                {
-                    data: 'smokes',
-                    name: 'smokes'
-                },
-                {
-                    data: 'client_meetings',
-                    name: 'client_meetings'
-                },
-                {
-                    data: 'daily_meeting',
-                    name: 'daily_meeting'
-                },
-                {
-                    data: 'mobiles',
-                    name: 'mobiles'
-                },
-                {
-                    data: 'other',
-                    name: 'other'
-                },
-                {
-                    data: 'description',
-                    name: 'description'
-                }
+            columns: [
+                {  data: 'date', name: 'date' },
+                { data: 'user_name', name: 'user_name', orderable: false, searchable: true },
+                { data: 'project_name', name: 'project_name', orderable: false, searchable: true },
+                {  data: 'task_tested', name: 'task_tested' },
+                {  data: 'bug_reported', name: 'bug_reported'  },
+                {  data: 'regression', name: 'regression'  },
+                {  data: 'smoke_testing',name: 'smoke_testing'  },
+                {  data: 'client_meeting', name: 'client_meeting' },
+                {   data: 'daily_meeting', name: 'daily_meeting' },
+                {   data: 'mobile_testing', name: 'mobile_testing' },
+                {   data: 'other', name: 'other' },
+                {   data: 'description', name: 'description' },
+               
             ],
             drawCallback: function() {
                 var api = this.api();
-
                 function sumColumn(columnIndex) {
                     var total = 0;
-                    api.column(columnIndex).data().each(function(value) {
-                        var numericValue = parseFloat(value) || 0;
-                        total += numericValue;
-                    });
-                    return total;
+                  if(api.column(columnIndex).data().length > 0){
+                        api.column(columnIndex).data().each(function(value) {
+                            var numericValue = parseFloat(value) || 0;
+                            total += numericValue;
+                        });
+                        return total;
+                    }
                 }
 
                 var totalTasks = sumColumn(3);
@@ -251,13 +202,14 @@
                 var totalClientMeeting = sumColumn(7);
                 var totalDailyMeeting = sumColumn(8);
                 var totalMobile = sumColumn(9);
+             
 
                 $(api.column(3).footer()).html(totalTasks);
                 $(api.column(4).footer()).html(totalBugs);
                 $(api.column(5).footer()).html(totalRegression);
                 $(api.column(6).footer()).html(totalSmoke);
-                $(api.column(7).footer()).html('tcm' + totalClientMeeting);
-                $(api.column(8).footer()).html('tdm' + totalDailyMeeting);
+                $(api.column(7).footer()).html( totalClientMeeting);
+                $(api.column(8).footer()).html( totalDailyMeeting);
                 $(api.column(9).footer()).html(totalMobile);
 
             }
