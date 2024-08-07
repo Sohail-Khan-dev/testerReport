@@ -44,7 +44,7 @@
                         </div>
                         <div class="mt-4">
                             <x-input-label for="role" :value="__('Role')" />
-                            <select name="role" class="form-select" aria-label="Default select example">
+                            <select id='role' name="role" class="form-select" aria-label="Default select example">
                                 <option selected>Role</option>
                                 <option value="admin">Admin</option>
                                 <option value="manager">Manager</option>

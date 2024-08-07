@@ -1,9 +1,4 @@
 <x-app-layout>
-    <style>
-
-    </style>
-
-
     <div class="py-12">
         <div class="px-4">
             <div class="bg-white ">
@@ -38,6 +33,8 @@
 </x-app-layout>
 <script>
     $(document).ready(function() {
+        console.log('this is js  calleing ');
+        var token = $('input[name="_token"]').val();
         $('#user-table').DataTable({
             processing: true,
             serverSide: true,
@@ -48,5 +45,26 @@
                 { data: 'role', name: 'role' }
             ]
         });
+
+        $('#name,#password,#email,#password_confirmation').on('blur', function(){
+            let inputFieled =  $(this).attr('id');
+            validateInput(inputFieled);
+        });
+
+        function validateInput(inputfield){
+            let inputValue = $('#'+inputfield).val();
+            console.log('INput value is : ' + inputValue);
+            $.ajax({
+                url: "{{ route('validate.field')}}",
+                method: 'POST',
+                data:{
+                    _token : token,
+                    field:inputfield,
+                    value
+                }
+
+            })
+            
+        }
     });
 </script>

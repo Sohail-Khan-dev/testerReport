@@ -1,9 +1,10 @@
 <x-app-layout>
     <style>
-
-    </style>
-
-
+    .full-screen-height {
+        height: calc(100vh - 100px); /* Adjust 100px based on your header/footer height */
+        overflow-y: auto;
+    }
+ </style>
     <div class="py-12">
         <div class="px-4">
             <div class="bg-white ">
@@ -17,7 +18,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="py-2 px-2">
+                <div class="table-container py-2 px-2">
                     <table id="reports-table" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
@@ -73,8 +74,8 @@
                         <div class="row row-cols-2">
                             @if(auth()->user()->role != 'admin' || auth()->user()->role != 'manager')
                             <div class="form-group ">
-                                <label for="user_id">Name</label>
-                                <input type="text" readonly value="  {{ auth()->user()->name}} ">
+                                <label for="user_id">Employee Name</label>
+                                <input id="user_id" type="text" readonly value="  {{ auth()->user()->name}} ">
                             @else
                             <div class="form-group ">
                                 <label for="user_id">Select Employee</label>
@@ -211,8 +212,13 @@
                 $(api.column(7).footer()).html( totalClientMeeting);
                 $(api.column(8).footer()).html( totalDailyMeeting);
                 $(api.column(9).footer()).html(totalMobile);
-
+                
             }
         });
+    //    let bodyScroll = $(".dataTables_scrollBody");
+    //     bodyScroll.removeClass('max-height');
+    //     bodyScroll.removeClass('height');
+
+
     });
 </script>

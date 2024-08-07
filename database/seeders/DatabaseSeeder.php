@@ -20,21 +20,21 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Zubair Khan',
             'email' => 'test@example.com',
-            'password' => Hash::make('$2a$12$MMzdXpFc/iiI6e2vB3Y7x.RnPosmBzBrA5bZegPeznHOAb15RZPtm'), // Hash the password
+            'password' => Hash::make('$2y$12$Qtguzy4eaDUJsODmmKi4e.YQirnzS1jaMuP3ek/ABBqIWG7ikeUau'), // Hash the password
             'role' => 'admin'
         ]);
 
         User::factory()->create([
             'name' => 'Khan',
             'email' => 'khan@email.com',
-            'password' => Hash::make('$2a$12$MMzdXpFc/iiI6e2vB3Y7x.RnPosmBzBrA5bZegPeznHOAb15RZPtm'),
+            'password' => Hash::make('$2y$12$Qtguzy4eaDUJsODmmKi4e.YQirnzS1jaMuP3ek/ABBqIWG7ikeUau'),
             'role' => 'user'
         ]);
 
         User::factory()->create([
             'name' => 'Ali',
             'email' => 'ali@email.com',
-            'password' => Hash::make('$2a$12$MMzdXpFc/iiI6e2vB3Y7x.RnPosmBzBrA5bZegPeznHOAb15RZPtm'),
+            'password' => Hash::make('$2y$12$Qtguzy4eaDUJsODmmKi4e.YQirnzS1jaMuP3ek/ABBqIWG7ikeUau'),
             'role' => 'manager'
         ]);
         Project::factory()->create([

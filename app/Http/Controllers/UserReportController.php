@@ -11,39 +11,41 @@ use Yajra\DataTables\Facades\DataTables;
 class UserReportController extends Controller
 {
     //
-    public function store(Request $request){
-
-        if(auth()->user()->role == 'user'){
-            $request['user_id'] = auth()->user()->id ;
+    
+    public function store(Request $request)
+    {
+        // dd(auth()->user()->role);
+        if (auth()->user()->role == 'user' || auth()->user()->role == null) {
+            $request['user_id'] = auth()->user()->id;
+            // dump('User id ' .  $request['user_id'], auth()->user()->role);
+           
         }
+    // dd($request['date'],$request['user_id'],$request->input(['project_id']),  $request->all());
         $validatedData = $request->validate([
-            'user_id' => 'required|not_in:None',
+            'user_id' => 'required',
             'project_id' => 'required',
             'date' => 'required|date'
         ]);
-        if($validatedData){
-            $report =  UserReport::create([
-                    'user_id' => $request->input('user_id'),
-                    'project_id' => $request->input('project_id'),
-                    'date' => $request->input('date'),
-                    'task_tested' => $request->input('task_tested'),
-                    'bug_reported' => $request->input('bug_reported'),
-                    'other' => $request->input('other'),
-                    'regression' => $request->input('regression'),
-                    'smoke_testing' => $request->input('smoke_testing'),
-                    'client_meeting' => $request->input('client_meeting'),
-                    'daily_meeting' => $request->input('daily_meeting'),
-                    'mobile_testing' => $request->input('mobile_testing'),
-                    'description' => $request->input('description'),
-                ]);
-            return redirect()->route('reporting');
-        }
-        else{
-            return response()->json([
-                'success' => false,
-                'errors' => $validatedData->errors()
-            ], 422);
-        }
+        // Assuming you want to handle the validated data
+        $report = UserReport::create([
+            'user_id' => $request->input('user_id'),
+            'project_id' => $request->input('project_id'),
+            'date' => $request->input('date'),
+            'task_tested' => $request->input('task_tested'),
+            'bug_reported' => $request->input('bug_reported'),
+            'other' => $request->input('other'),
+            'regression' => $request->input('regression'),
+            'smoke_testing' => $request->input('smoke_testing'),
+            'client_meeting' => $request->input('client_meeting'),
+            'daily_meeting' => $request->input('daily_meeting'),
+            'mobile_testing' => $request->input('mobile_testing'),
+            'description' => $request->input('description'),
+        ]);
+    
+        // Debugging statement removed
+        // dd('here we are' , $report);
+    
+        return redirect()->route('reporting');
     }
     public function index(){
         $users = User::all();
