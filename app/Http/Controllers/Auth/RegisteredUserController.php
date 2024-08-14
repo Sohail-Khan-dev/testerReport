@@ -43,7 +43,7 @@ class RegisteredUserController extends Controller
             'role' => $request->role
         ]);
 
-        event(new Registered($user));   // this call an event whcih make the the user $this->user i.e current login User 
+        event(new Registered($user));   // this call an event whcih make the the user $this->user i.e current login User
 
         Auth::login($user);
 
@@ -51,12 +51,13 @@ class RegisteredUserController extends Controller
     }
 
     public function storeNew(Request $request){
+//        dd($request->all());/
         if($request['role'] == null){
             $request['role'] = 'admin';
         }
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
         $user = User::create([
@@ -65,7 +66,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
-      return redirect()->route('users');
+        return response()->json(['success'=>true, 'user'=>$user]);
+//      return redirect()->route('users');
     }
     public function index(){
         return view('qareport.user');
@@ -73,5 +75,17 @@ class RegisteredUserController extends Controller
     public function getAllUser(){
         $users = User::select(['name','email','role']);
         return datatables($users)->make(true);
+    }
+    public function validateField(Request $request){
+//        dd($request->all());
+        if($request['field'] == 'email'){
+            $request->validate([
+               $request['field'] =>  ['required', 'string', 'email', 'max:255', 'unique:'.User::class]
+            ]);
+        }else if($request['field'] == 'name'){
+            $request->validate([
+                $request['field'] =>  ['required', 'string','max:255']
+            ]);
+        }
     }
 }

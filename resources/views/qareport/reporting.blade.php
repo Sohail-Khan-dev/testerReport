@@ -1,10 +1,4 @@
 <x-app-layout>
-    <style>
-    .full-screen-height {
-        height: calc(100vh - 100px); /* Adjust 100px based on your header/footer height */
-        overflow-y: auto;
-    }
- </style>
     <div class="py-12">
         <div class="px-4">
             <div class="bg-white ">
@@ -13,7 +7,7 @@
                         {{ __("All QA's Report") }}
                     </div>
                     <div>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-input-modal">
                             Add Task
                         </button>
                     </div>
@@ -41,7 +35,9 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th class="colspan=2">Total</th>
+                                <th>Total</th>
+                                <th>User </th>
+                                <th>Project</th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -49,33 +45,33 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <th>No sum </th>
+                                <th>No Summation </th>
                             </tr>
                         </tfoot>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="report-input-modal" tabindex="-1" role="dialog" aria-labelledby="report-input-modalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header d-flex justify-between h5">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Daily Tasks Done</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title" id="longTitle">Daily Tasks Done</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" id="closeModalbtn">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('user-reports.store') }}" method="POST">
+                    <form id="reportForm"> {{-- action="{{ route('user-reports.store') }}" method="POST">--}}
                         @csrf
                         <div class="row row-cols-2">
-                            @if(auth()->user()->role != 'admin' || auth()->user()->role != 'manager')
+                            @if(auth()->user()->role != 'admin' && auth()->user()->role != 'manager')
                             <div class="form-group ">
-                                <label for="user_id">Employee Name</label>
-                                <input id="user_id" type="text" readonly value="  {{ auth()->user()->name}} ">
+                                <label for="user_id">Employee Name sdf </label>
+                                <input id="user_id" type="text" readonly value="{{ auth()->user()->name}}">
                             @else
                             <div class="form-group ">
                                 <label for="user_id">Select Employee</label>
@@ -91,13 +87,10 @@
                                 <label for="date">Date</label>
                                 <input type="date" class="form-control" id="date" name="date" value="{{ date('Y-m-d') }}" readonly>
                             </div>
-                        <!-- </div> -->
-                        <!-- <div class="d-flex justify-between align-items-center"> -->
-                           
                             <div class="form-group">
                                 <label for="project_id">Select Project</label>
-                                <select class="form-control" id="project_id" name="project_id">
-                                    <option value="none" selected> Select Project</option>
+                                <select class="form-control" id="project_id" name="project_id" required>
+                                    <option value="" selected> Select Project</option>
                                     @foreach($projects as $project)
                                     <option value="{{$project->id}}">{{$project->name}}</option>
                                     @endforeach
@@ -105,10 +98,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="task_tested">Task Tested</label>
-                                <input type="number" class="form-control" id="task_tested" name="task_tested">
+                                <input type="number" class="form-control" id="task_tested" name="task_tested" required>
                             </div>
-                        <!-- </div> -->
-                        <!-- <div class="d-flex justify-between align-items-center"> -->
                             <div class="form-group">
                                 <label for="bug_reported">Bug Reported</label>
                                 <input type="number" class="form-control" id="bug_reported" name="bug_reported">
@@ -158,67 +149,106 @@
             </div>
         </div>
     </div>
+    </div>
 </x-app-layout>
 <script>
     $(document).ready(function() {
-        $('#reports-table').DataTable({
-            processing: true,
-            serverSide: true,
-            dom : 'rtflp',
-            scrollX:true,
-            scrollY: 100,
-            ajax: '{{ route("reports.data") }}',
-            columns: [
-                {  data: 'date', name: 'date' },
-                { data: 'user_name', name: 'user_name', orderable: false, searchable: true },
-                { data: 'project_name', name: 'project_name', orderable: false, searchable: true },
-                {  data: 'task_tested', name: 'task_tested' },
-                {  data: 'bug_reported', name: 'bug_reported'  },
-                {  data: 'regression', name: 'regression'  },
-                {  data: 'smoke_testing',name: 'smoke_testing'  },
-                {  data: 'client_meeting', name: 'client_meeting' },
-                {   data: 'daily_meeting', name: 'daily_meeting' },
-                {   data: 'mobile_testing', name: 'mobile_testing' },
-                {   data: 'other', name: 'other' },
-                {   data: 'description', name: 'description' },
-               
-            ],
-            drawCallback: function() {
-                var api = this.api();
-                function sumColumn(columnIndex) {
-                    var total = 0;
-                  if(api.column(columnIndex).data().length > 0){
-                        api.column(columnIndex).data().each(function(value) {
-                            var numericValue = parseFloat(value) || 0;
-                            total += numericValue;
-                        });
-                        return total;
-                    }
+        loadReportData();
+        $('#reportForm').on('submit', function(e) {
+           console.log("Form is submitted ")
+            e.preventDefault(); // Prevent the default form submission
+            let formData = new FormData(this);
+
+            fetch('{{ route('user-reports.store') }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
 
-                var totalTasks = sumColumn(3);
-                var totalBugs = sumColumn(4);
-                var totalRegression = sumColumn(5);
-                var totalSmoke = sumColumn(6);
-                var totalClientMeeting = sumColumn(7);
-                var totalDailyMeeting = sumColumn(8);
-                var totalMobile = sumColumn(9);
-             
-
-                $(api.column(3).footer()).html(totalTasks);
-                $(api.column(4).footer()).html(totalBugs);
-                $(api.column(5).footer()).html(totalRegression);
-                $(api.column(6).footer()).html(totalSmoke);
-                $(api.column(7).footer()).html( totalClientMeeting);
-                $(api.column(8).footer()).html( totalDailyMeeting);
-                $(api.column(9).footer()).html(totalMobile);
-                
-            }
+                    $('#report-input-modal').modal('hide');
+                    $('#closeModalbtn').click();
+                    // $('#reportForm')[0].reset();
+                    loadReportData();
+                } else {
+                    // Handle validation errors
+                    console.log(data.errors);
+                }
+            })
+            .catch(error => console.error('Error: ', error));
         });
-    //    let bodyScroll = $(".dataTables_scrollBody");
-    //     bodyScroll.removeClass('max-height');
-    //     bodyScroll.removeClass('height');
+        function loadReportData(){
+            if ($.fn.DataTable.isDataTable('#reports-table')) {
+                $('#reports-table').DataTable().clear().destroy();
+            }
+            $('#reports-table').DataTable({
+                processing: true,
+                serverSide: true,
+                dom : '<"top" f> rtlp',
+                scrollX:true,
+                scrollY: '60vh',  // We can fix the height of the dataTable.
+                scrollCollapse: true,
+                paging: true,
+                ajax: '{{ route("reports.data") }}',
+                columns: [
+                    {  data: 'date', name: 'date' },
+                    { data: 'user_name', name: 'user_name', orderable: false, searchable: true },
+                    { data: 'project_name', name: 'project_name', orderable: false, searchable: true },
+                    {  data: 'task_tested', name: 'task_tested' },
+                    {  data: 'bug_reported', name: 'bug_reported'  },
+                    {  data: 'regression', name: 'regression'  },
+                    {  data: 'smoke_testing',name: 'smoke_testing'  },
+                    {  data: 'client_meeting', name: 'client_meeting' },
+                    {   data: 'daily_meeting', name: 'daily_meeting' },
+                    {   data: 'mobile_testing', name: 'mobile_testing' },
+                    {   data: 'other', name: 'other' },
+                    {   data: 'description', name: 'description' },
+
+                ],
+                drawCallback: function() {
+                    var api = this.api();
+                    function sumColumn(columnIndex) {
+                        var total = 0;
+                        if(api.column(columnIndex).data().length > 0){
+                            api.column(columnIndex).data().each(function(value) {
+                                var numericValue = parseFloat(value) || 0;
+                                total += numericValue;
+                            });
+                            return total;
+                        }
+                    }
+
+                    const totalTasks = sumColumn(3);
+                    const totalBugs = sumColumn(4);
+                    const totalRegression = sumColumn(5);
+                    const totalSmoke = sumColumn(6);
+                    const totalClientMeeting = sumColumn(7);
+                    const totalDailyMeeting = sumColumn(8);
+                    const totalMobile = sumColumn(9);
 
 
+                    $(api.column(3).footer()).html(totalTasks);
+                    $(api.column(4).footer()).html(totalBugs);
+                    $(api.column(5).footer()).html(totalRegression);
+                    $(api.column(6).footer()).html(totalSmoke);
+                    $(api.column(7).footer()).html( totalClientMeeting);
+                    $(api.column(8).footer()).html( totalDailyMeeting);
+                    $(api.column(9).footer()).html(totalMobile);
+                },
+                initComplete: function (settings, json) {
+                    // Copy the width of the header columns to the footer columns
+                    let api = this.api();
+                    $(api.columns().footer()).each(function(i) {
+                        let c =  $(this).width($(api.column(i).header()).width());
+                        // debugger
+                        //  console.log(c)
+                    });
+                }
+            });
+        }
     });
 </script>

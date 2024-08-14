@@ -14,20 +14,20 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::post('register/new', [RegisteredUserController::class, 'storeNew'])
-    ->name('register.new');
+    Route::post('register/new', [RegisteredUserController::class, 'storeNew'])->name('register.new');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/report',[UserReportController::class,'store'])->name('user-reports.store');
-    Route::get('/report',[UserReportController::class,'store'])->name('user-reports.get');
+//    Route::get('/report',[UserReportController::class,'store'])->name('user-reports.get');
     Route::delete('/report',[UserReportController::class,'store'])->name('user-reports.delete');
     Route::patch('/report',[UserReportController::class,'store'])->name('user-reports.update');
     Route::get('/reporting',[UserReportController::class,'index'])->name('reporting');
     Route::get('/reports',[UserReportController::class,'getData'])->name('reports.data');
-    // Below is for the User  Routes We have to Update the profile routes and Use this for User 
+    // Below is for the User  Routes We have to Update the profile routes and Use this for User
     Route::get('/users',[RegisteredUserController::class,'index'])->name('users');
     Route::get('/get-user',[RegisteredUserController::class,'getAllUser'])->name('users.data');
+    Route::post('/validate-user',[RegisteredUserController::class,'validateField'])->name('validate.field');
 
 });
 Route::get('test',function(){
@@ -38,10 +38,8 @@ require __DIR__.'/auth.php';
 
 
 Route::get('/layout',function(){
-    
         return view('tabler.layout-vertical-1');
         return view('tabler.layout-vertical');
-    
 });
 Route::get('/modal',function(){
     return view('tabler.modals');

@@ -23,6 +23,7 @@
                 {{ __('Reporting') }}
             </x-nav-link>
           </li>
+{{--            @dd(auth()->user()->role);--}}
           @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
           <li class="nav-item">
             <x-nav-link :href="route('users')" :active="request()->routeIs('users')">

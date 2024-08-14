@@ -11,22 +11,22 @@ use Yajra\DataTables\Facades\DataTables;
 class UserReportController extends Controller
 {
     //
-    
+
     public function store(Request $request)
     {
-        // dd(auth()->user()->role);
-        if (auth()->user()->role == 'user' || auth()->user()->role == null) {
+//        dump('Call is her for the request');
+        if (auth()->user()->role == 'user' || auth()->user()->role == null || $request['user_id'] == null) {
             $request['user_id'] = auth()->user()->id;
-            // dump('User id ' .  $request['user_id'], auth()->user()->role);
-           
         }
-    // dd($request['date'],$request['user_id'],$request->input(['project_id']),  $request->all());
+//        dd($request['user_id']);
+
         $validatedData = $request->validate([
             'user_id' => 'required',
-            'project_id' => 'required',
+            'project_id' => ['required', 'integer'],
             'date' => 'required|date'
         ]);
-        // Assuming you want to handle the validated data
+//        dd("after auth validation ");
+
         $report = UserReport::create([
             'user_id' => $request->input('user_id'),
             'project_id' => $request->input('project_id'),
@@ -41,11 +41,8 @@ class UserReportController extends Controller
             'mobile_testing' => $request->input('mobile_testing'),
             'description' => $request->input('description'),
         ]);
-    
-        // Debugging statement removed
-        // dd('here we are' , $report);
-    
-        return redirect()->route('reporting');
+//dd($report);
+        return response()->json(['success' => true,'record' => $report]);
     }
     public function index(){
         $users = User::all();

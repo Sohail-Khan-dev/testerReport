@@ -3,13 +3,13 @@
         <div class="modal-content">
             <div class="modal-header d-flex justify-between h5">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add New User</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" id="close-modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <x-guest-layout>
-                    <form method="POST" action="{{ route('register.new') }}">
+                    <form id="add-user-form"> {{-- method="POST" action="{{ route('register.new') }}">--}}
                         @csrf
                         <!-- Name -->
                         <div>
@@ -29,7 +29,7 @@
                         <div class="mt-4">
                             <x-input-label for="password" :value="__('Password')" />
 
-                            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
+                            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" minlength="8" required autocomplete="new-password" />
 
                             <x-input-error :messages="$errors->get('password')" class="mt-2" />
                         </div>
@@ -44,8 +44,8 @@
                         </div>
                         <div class="mt-4">
                             <x-input-label for="role" :value="__('Role')" />
-                            <select id='role' name="role" class="form-select" aria-label="Default select example">
-                                <option selected>Role</option>
+                            <select id='role' name="role" class="form-select" aria-label="Default select example" required>
+                                <option value="" selected>Role</option>
                                 <option value="admin">Admin</option>
                                 <option value="manager">Manager</option>
                                 <option value="user">User</option>
@@ -63,13 +63,7 @@
                         </div>
                     </form>
                 </x-guest-layout>
-
             </div>
-            <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
-        </div> -->
-            </form>
         </div>
     </div>
 </div>
