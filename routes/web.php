@@ -4,8 +4,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
+    if(Auth::check()){
+        return redirect()->route('dashboard');
+    }
     return view('welcome');
 });
 

@@ -39,7 +39,9 @@
 
     <div class="centered-links">
         @auth
-        <a href="{{ url('/dashboard') }}" class="custom-link">Dashboard</a>
+        <script>
+            window.location.href = "{{ route('dashboard') }}";
+        </script>
         @else
         <a href="{{ route('login') }}" class="custom-link">Log in</a>
         @if (Route::has('register'))
