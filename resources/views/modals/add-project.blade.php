@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header d-flex justify-between h5">
-                <h5 class="modal-title" id="exampleModalLongTitle">Add New User</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Add New Project</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" id="close-modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -18,7 +18,7 @@
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <input type="text" class="form-control" id="description" name="description" required>
+                            <input type="text" class="form-control" id="description" name="description">
                         </div>
                     </div>
                     <div class="modal-footer">

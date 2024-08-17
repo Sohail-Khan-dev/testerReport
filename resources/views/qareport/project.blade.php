@@ -33,13 +33,13 @@
 </x-app-layout>
 <script>
     $(document).ready(function() {
-
-        $('#projectForm').on('submit', function(e) {
-           ray("Form is submitted ");
+        loadProject();
+        $('#projectForm').on('submit', function (e) {
+            console.log("Form is submitted ");
             e.preventDefault(); // Prevent the default form submission
             let formData = new FormData(this);
 
-            fetch('{{ route('user-reports.store') }}', {
+            fetch('{{ route('project.store') }}', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -49,11 +49,11 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-
+                        console.log('success ')
                         $('#report-input-modal').modal('hide');
                         $('#closeModalbtn').click();
                         // $('#reportForm')[0].reset();
-                        loadReportData();
+                        loadProject();
                     } else {
                         // Handle validation errors
                         console.log(data.errors);
@@ -61,4 +61,20 @@
                 })
                 .catch(error => console.error('Error: ', error));
         });
+        function loadProject(){
+            if($.fn.dataTable.isDataTable('#project-table')){
+                $('#project-table').DataTable().clear().destroy();
+            }
+            $('#project-table').DataTable({
+                processing: true,
+                serverSide: true,
+                dom: '<"top"f> rt<"bottom"ip><"clear">',
+                ajax: '{{ route("project.data") }}',
+                columns: [
+                    { data: 'name', name: 'name' },
+                    { data: 'description', name: 'description' }
+                ]
+            });
+        }
+    });
 </script>
