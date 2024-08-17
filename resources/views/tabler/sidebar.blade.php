@@ -30,6 +30,11 @@
                 {{ __('Users') }}
             </x-nav-link>
           </li>
+            <li class="nav-item">
+                <x-nav-link :href="route('projects')" :active="request()->routeIs('projects')">
+                    {{ __('Projects') }}
+                </x-nav-link>
+          </li>
           @endif
         </ul>
       </div>

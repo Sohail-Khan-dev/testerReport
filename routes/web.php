@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
     // Below is for the User  Routes We have to Update the profile routes and Use this for User
     Route::get('/users',[RegisteredUserController::class,'index'])->name('users');
     Route::get('/get-user',[RegisteredUserController::class,'getAllUser'])->name('users.data');
-    // Route::post('/validate-user',[RegisteredUserController::class,'validateField'])->name('validate.field');
+    Route::get('/projects',[\App\Http\Controllers\ProjectController::class,'index'])->name('projects');
 
 });
 Route::get('test',function(){

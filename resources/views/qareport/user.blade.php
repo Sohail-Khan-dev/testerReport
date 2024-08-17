@@ -35,8 +35,8 @@
 <script>
     $(document).ready(function() {
 
-    loadUserData();
-      function loadUserData(){
+    loadUsers();
+      function loadUsers(){
           if($.fn.dataTable.isDataTable('#user-table')){
               $('#user-table').DataTable().clear().destroy();
           }
