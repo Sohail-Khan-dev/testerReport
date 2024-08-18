@@ -51,7 +51,7 @@
                     if (data.success) {
                         console.log('success ')
                         $('#report-input-modal').modal('hide');
-                        $('#closeModalbtn').click();
+                        $('#close-modal').click();
                         // $('#reportForm')[0].reset();
                         loadProject();
                     } else {
