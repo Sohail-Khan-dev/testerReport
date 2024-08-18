@@ -4,7 +4,8 @@
             <div class="bg-white ">
                 <div class="outer d-flex justify-between align-items-center px-4 border-bottom">
                     <div class="p-6 text-gray-900 d-flex justify-center w-75 font-semibold text-2xl">
-                        {{ __("All QA's Report") }}
+                       @can('is-admin')  {{ __("All QA's Report") }}@endcan
+                        @can('is-user') {{ __("Today Report") }}@endcan
                     </div>
                     <div>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-input-modal">

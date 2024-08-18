@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\UserReport;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Gate;
 
 class UserReportController extends Controller
 {
@@ -54,6 +55,12 @@ class UserReportController extends Controller
     {
         $reports = UserReport::with(['user', 'project'])->select(['date','user_id','project_id','task_tested','bug_reported','regression','smoke_testing','client_meeting',
                                     'daily_meeting','mobile_testing','other','description']);
+        if (Gate::denies('is-admin')) {   // if Not admin then below code witll run
+            // User is not an admin
+            $reports->where('user_id',auth()->user()->id)    // This will get only the logedIn user Records
+                ->whereDate('date', today())->get();      // This will get only today Records .
+//            dd('This is the User not Admin ');
+        }
 
         return DataTables::of($reports)
         ->filterColumn('user_name', function($query, $keyword) {
