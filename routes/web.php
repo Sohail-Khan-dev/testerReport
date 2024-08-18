@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -31,7 +32,11 @@ Route::middleware('auth')->group(function () {
     // Below is for the User  Routes We have to Update the profile routes and Use this for User
     Route::get('/users',[RegisteredUserController::class,'index'])->name('users');
     Route::get('/get-user',[RegisteredUserController::class,'getAllUser'])->name('users.data');
-    Route::get('/projects',[\App\Http\Controllers\ProjectController::class,'index'])->name('projects');
+
+    // Below are the Routes for the Project
+    Route::get('/projects',[ProjectController::class,'index'])->name('projects');
+    Route::post('/save',[ProjectController::class,'store'])->name('project.store');
+    Route::get('/save',[ProjectController::class,'get'])->name('project.data');
 
 });
 Route::get('test',function(){
