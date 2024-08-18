@@ -1,3 +1,9 @@
+<style>
+    .users-button-div a{
+        margin-left:4px ;
+        margin-right: 4px;
+    }
+</style>
 <x-app-layout>
     <div class="py-12">
         <div class="px-4">
