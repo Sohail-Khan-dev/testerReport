@@ -77,10 +77,18 @@ class RegisteredUserController extends Controller
             return response()->json(['success'=>true,'message' => 'User deleted successfully.']);
         else
             return response()->json(['Fail to delete']);
-//        $user = User::Find($id);
-//        if($user)
-//          $user->delete();
     }
+
+    public function directLogin($id): RedirectResponse
+    {
+        $user = User::find($id);
+        if($user){
+            Auth::login($user);
+            return redirect()->route('dashboard')->with('success','You have logged in as '. $user->name);
+        }
+        return redirect()->back()->with('error', 'User not found');
+    }
+
     /**
      * @throws Exception
      */
@@ -88,7 +96,7 @@ class RegisteredUserController extends Controller
         $users = User::select(['id','name','email','role']);
         return datatables($users)
             ->addColumn('action',function ($row){
-                $buttons = '<a href="' . route('login', $row->id) . '" class="btn btn-sm btn-primary rounded">Login</a>';
+                $buttons = '<a href="javascript:void(0)" data-id="'.$row->id.'"   class="btn btn-sm btn-primary rounded loginUser">Login</a>';
                 $buttons .= '<a href="' . route('profile.edit', $row->id) . '" class="btn btn-sm btn-warning rounded">Edit</a>';
                 if($row->id != auth()->user()->id)
                     $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-sm btn-danger deleteUser rounded">Delete</a>';

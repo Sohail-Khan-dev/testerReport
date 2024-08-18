@@ -48,13 +48,19 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function (response){
-                        loadUsers();
+                        $('#user-table').DataTable().ajax.reload();
                       alert(response.message);
                     },
                 });
             }
         });
-
+        $(document).on('click', '.loginUser', function (){
+            let userId = $(this).data('id');
+            console.log('User id is : ' + userId);
+            if(confirm('Are you sure to login this user?')){
+                window.location.href = '/login-direct/'+userId;
+            }
+        });
         loadUsers();
         function loadUsers(){
           if($.fn.dataTable.isDataTable('#user-table')){
@@ -92,7 +98,7 @@
                     console.log('Success Response is : ' , response);
                     $('#close-modal').click();
                     $('#add-user-form')[0].reset();
-                    loadUsers();
+                    $('#user-table').DataTable().ajax.reload();
                 },
                 error: function(xhr, status, error) {
                     console.error('Error Response is:', error);
