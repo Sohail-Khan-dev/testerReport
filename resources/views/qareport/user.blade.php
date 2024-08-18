@@ -70,13 +70,14 @@
                 success : function (response){
                     console.log('Success Response is : ' , response);
                     $('#close-modal').click();
-                    loadUserData();
+                    loadUsers();
                 },
                 error: function(xhr, status, error) {
                     console.error('Error Response is:', error);
                 }
             });
         }else {
+            alert('Password does not matched');
             console.log("confirm Password is not correct ")
         }
 
