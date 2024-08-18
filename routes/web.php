@@ -6,37 +6,46 @@ use App\Http\Controllers\UserReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 Route::get('/', function () {
     if(Auth::check()){
-        return redirect()->route('dashboard');
+        if(Gate::allows('is-admin'))
+            return redirect()->route('dashboard');
+        else if(Gate::allows('user'))
+            return redirect()->route('reporting');
     }
     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
-    return view('qareport.dashboard');
+    if(Gate::allows('is-admin'))
+        return view('qareport.dashboard');
+    else if(Gate::allows('is-user'))
+        return redirect()->route('reporting');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::post('register/new', [RegisteredUserController::class, 'storeNew'])->name('register.new');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::middleware(['is-admin'])->group(function (){
+        Route::post('register/new', [RegisteredUserController::class, 'storeNew'])->name('register.new');
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        // Below is for the User  Routes We have to Update the profile routes and Use this for User
+        Route::get('/users',[RegisteredUserController::class,'index'])->name('users');
+        Route::get('/get-user',[RegisteredUserController::class,'getAllUser'])->name('users.data');
+
+        Route::get('/projects',[ProjectController::class,'index'])->name('projects');
+        Route::post('/save',[ProjectController::class,'store'])->name('project.store');
+        Route::get('/save',[ProjectController::class,'get'])->name('project.data');
+        Route::delete('/report',[UserReportController::class,'store'])->name('user-reports.delete');
+    });
+
     Route::post('/report',[UserReportController::class,'store'])->name('user-reports.store');
-//    Route::get('/report',[UserReportController::class,'store'])->name('user-reports.get');
-    Route::delete('/report',[UserReportController::class,'store'])->name('user-reports.delete');
     Route::patch('/report',[UserReportController::class,'store'])->name('user-reports.update');
     Route::get('/reporting',[UserReportController::class,'index'])->name('reporting');
     Route::get('/reports',[UserReportController::class,'getData'])->name('reports.data');
-    // Below is for the User  Routes We have to Update the profile routes and Use this for User
-    Route::get('/users',[RegisteredUserController::class,'index'])->name('users');
-    Route::get('/get-user',[RegisteredUserController::class,'getAllUser'])->name('users.data');
 
-    // Below are the Routes for the Project
-    Route::get('/projects',[ProjectController::class,'index'])->name('projects');
-    Route::post('/save',[ProjectController::class,'store'])->name('project.store');
-    Route::get('/save',[ProjectController::class,'get'])->name('project.data');
 
 });
 Route::get('test',function(){
