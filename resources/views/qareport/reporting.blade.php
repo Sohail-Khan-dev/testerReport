@@ -173,7 +173,7 @@
 
                     $('#report-input-modal').modal('hide');
                     $('#closeModalbtn').click();
-                    // $('#reportForm')[0].reset();
+                    $('#reportForm')[0].reset();
                     loadReportData();
                 } else {
                     // Handle validation errors

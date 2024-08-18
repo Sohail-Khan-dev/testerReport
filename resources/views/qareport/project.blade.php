@@ -50,9 +50,8 @@
                 .then(data => {
                     if (data.success) {
                         console.log('success ')
-                        $('#report-input-modal').modal('hide');
                         $('#close-modal').click();
-                        // $('#reportForm')[0].reset();
+                        $('#projectForm')[0].reset();
                         loadProject();
                     } else {
                         // Handle validation errors

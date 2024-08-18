@@ -70,6 +70,7 @@
                 success : function (response){
                     console.log('Success Response is : ' , response);
                     $('#close-modal').click();
+                    $('#add-user-form')[0].reset();
                     loadUsers();
                 },
                 error: function(xhr, status, error) {
