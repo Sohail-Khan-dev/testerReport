@@ -11,7 +11,7 @@
                 @else
                     <a href="{{ route('reporting') }}">
                 @endif
-                    <x-application-logo class="block h-9 w-auto fill-current text-gray-800"/>
+                <x-application-logo class="block h-9 w-auto fill-current text-gray-800"/>
                 </a>
             </div>
         </h1>
