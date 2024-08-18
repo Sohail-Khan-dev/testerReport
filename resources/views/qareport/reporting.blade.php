@@ -75,8 +75,8 @@
                             @else
                             <div class="form-group ">
                                 <label for="user_id">Select Employee</label>
-                                <select class="form-control" id="user_id" name="user_id">
-                                    <option value="None">Choose Employee</option>
+                                <select class="form-control" id="user_id" name="user_id" required>
+                                    <option value="">Choose Employee</option>
                                     @foreach ($users as $user)
                                     <option value="{{$user->id}}">{{$user->name}}</option>
                                     @endforeach
