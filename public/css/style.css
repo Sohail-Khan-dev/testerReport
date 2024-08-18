@@ -46,3 +46,8 @@ table.dataTable tfoot th, table.dataTable tfoot td {
     font-weight: bold;
     font-size: small;
 }
+.users-button-div a{
+    /*background: #0b956c;*/
+    margin-left:4px ;
+    margin-right: 4px;
+}

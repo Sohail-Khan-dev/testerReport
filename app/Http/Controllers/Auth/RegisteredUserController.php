@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Yajra\DataTables\Exceptions\Exception;
 
 class RegisteredUserController extends Controller
 {
@@ -51,7 +52,6 @@ class RegisteredUserController extends Controller
     }
 
     public function storeNew(Request $request){
-//        dd($request->all());/
         if($request['role'] == null){
             $request['role'] = 'admin';
         }
@@ -67,25 +67,41 @@ class RegisteredUserController extends Controller
             'role' => $request->role,
         ]);
         return response()->json(['success'=>true, 'user'=>$user]);
-//      return redirect()->route('users');
     }
     public function index(){
         return view('qareport.user');
     }
+    public function destroy($id): \Illuminate\Http\JsonResponse
+    {
+        if(User::destroy($id))
+            return response()->json(['success'=>true,'message' => 'User deleted successfully.']);
+        else
+            return response()->json(['Fail to delete']);
+//        $user = User::Find($id);
+//        if($user)
+//          $user->delete();
+    }
+    /**
+     * @throws Exception
+     */
     public function getAllUser(){
-        $users = User::select(['name','email','role']);
-        return datatables($users)->make(true);
+        $users = User::select(['id','name','email','role']);
+        return datatables($users)
+            ->addColumn('action',function ($row){
+                $buttons = '<a href="' . route('login', $row->id) . '" class="btn btn-sm btn-primary rounded">Login</a>';
+                $buttons .= '<a href="' . route('profile.edit', $row->id) . '" class="btn btn-sm btn-warning rounded">Edit</a>';
+                if($row->id != auth()->user()->id)
+                    $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-sm btn-danger deleteUser rounded">Delete</a>';
+
+                // Enable/Disable toggle (You can use a condition to display the correct state)
+                if ($row->is_active) {
+                    $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-sm btn-secondary toggleStatus rounded">Disable</a>';
+                } else {
+                    $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-sm btn-success toggleStatus rounded">Enable</a>';
+                }
+                return "<div class='users-button-div'>". $buttons . "</div>";
+            })
+            ->make(true);
     }
-    public function validateField(Request $request){
-//        dd($request->all());
-        if($request['field'] == 'email'){
-            $request->validate([
-               $request['field'] =>  ['required', 'string', 'email', 'max:255', 'unique:'.User::class]
-            ]);
-        }else if($request['field'] == 'name'){
-            $request->validate([
-                $request['field'] =>  ['required', 'string','max:255']
-            ]);
-        }
-    }
+
 }

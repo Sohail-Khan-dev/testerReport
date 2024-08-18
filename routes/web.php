@@ -30,7 +30,7 @@ Route::middleware('auth')->group(function () {
         Route::post('register/new', [RegisteredUserController::class, 'storeNew'])->name('register.new');
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::delete('/user/{id}', [RegisteredUserController::class, 'destroy'])->name('user.destroy');
         // Below is for the User  Routes We have to Update the profile routes and Use this for User
         Route::get('/users',[RegisteredUserController::class,'index'])->name('users');
         Route::get('/get-user',[RegisteredUserController::class,'getAllUser'])->name('users.data');
@@ -38,7 +38,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/projects',[ProjectController::class,'index'])->name('projects');
         Route::post('/save',[ProjectController::class,'store'])->name('project.store');
         Route::get('/save',[ProjectController::class,'get'])->name('project.data');
-        Route::delete('/report',[UserReportController::class,'store'])->name('user-reports.delete');
+        Route::delete('/report',[UserReportController::class,'delete'])->name('user-reports.delete');
+
     });
 
     Route::post('/report',[UserReportController::class,'store'])->name('user-reports.store');

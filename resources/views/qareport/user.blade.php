@@ -19,6 +19,7 @@
                                 <th> Name</th>
                                 <th> Email</th>
                                 <th> Role </th>
+                                <th> Action </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,9 +35,28 @@
 </x-app-layout>
 <script>
     $(document).ready(function() {
+        $(document).on('click','.deleteUser',function (e){
+            e.preventDefault();
+            let userId = $(this).data('id');
+            console.log('User id is : ' + userId);
+            let url = '/user/'+userId;
+            if(confirm("Do you want to delete this user?")){
+                $.ajax({
+                    url: url,
+                    type:'DELETE',
+                    data:{
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function (response){
+                        loadUsers();
+                      alert(response.message);
+                    },
+                });
+            }
+        });
 
-    loadUsers();
-      function loadUsers(){
+        loadUsers();
+        function loadUsers(){
           if($.fn.dataTable.isDataTable('#user-table')){
               $('#user-table').DataTable().clear().destroy();
           }
@@ -48,11 +68,12 @@
               columns: [
                   { data: 'name', name: 'name' },
                   { data: 'email', name: 'email' },
-                  { data: 'role', name: 'role' }
+                  { data: 'role', name: 'role' },
+                  { data: 'action', name: 'action'}
               ]
           });
       }
-    $("#add-user-form").on('submit',function (e){
+        $("#add-user-form").on('submit',function (e){
         e.preventDefault();
         console.log("Submit is Called ");
         let passwordVal = $("#password").val();

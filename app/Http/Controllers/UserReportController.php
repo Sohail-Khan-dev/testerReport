@@ -15,18 +15,16 @@ class UserReportController extends Controller
 
     public function store(Request $request)
     {
-//        dump('Call is her for the request');
         if (auth()->user()->role == 'user' || auth()->user()->role == null || $request['user_id'] == null) {
             $request['user_id'] = auth()->user()->id;
         }
-//        dd($request['user_id']);
+
 
         $validatedData = $request->validate([
             'user_id' => 'required',
             'project_id' => ['required', 'integer'],
             'date' => 'required|date'
         ]);
-//        dd("after auth validation ");
 
         $report = UserReport::create([
             'user_id' => $request->input('user_id'),
@@ -42,7 +40,6 @@ class UserReportController extends Controller
             'mobile_testing' => $request->input('mobile_testing'),
             'description' => $request->input('description'),
         ]);
-//dd($report);
         return response()->json(['success' => true,'record' => $report]);
     }
     public function index(){
@@ -59,7 +56,7 @@ class UserReportController extends Controller
             // User is not an admin
             $reports->where('user_id',auth()->user()->id)    // This will get only the logedIn user Records
                 ->whereDate('date', today())->get();      // This will get only today Records .
-//            dd('This is the User not Admin ');
+
         }
 
         return DataTables::of($reports)
@@ -82,25 +79,4 @@ class UserReportController extends Controller
             ->make(true);
     }
 
-    // public function showReports(){
-    //     $reports = UserReport::with(['user','project'])->get();
-    //     $total_tasks = $reports->sum('task_tested');
-    //     $total_bugs = $reports->sum('bug_reported');
-    //     $total_regression = $reports->sum('regression');
-    //     $total_smoke = $reports->sum('smoke_testing');
-    //     $total_client_meeting = $reports->sum('client_meeting');
-    //     $total_daily_meeting = $reports->sum('daily_meeting');
-    //     $total_mobile = $reports->sum('mobile_testing');
-    //     $users = User::all();
-    //     $projects = Project::all();
-    //     return view('reporting', compact('reports','users','projects','total_tasks','total_bugs','total_regression','total_smoke',
-    //                                      'total_client_meeting','total_daily_meeting','total_mobile'));
-    // }
-
-    // public function getUserReports(){
-    //     $reports = UserReport::with(['user','project'])->get();
-    //     $users = User::all();
-    //     $projects = Project::all();
-    //     return view('reporting',['users'=>$users, 'projects' => $projects,'reports'=>$reports]);
-    // }
 }

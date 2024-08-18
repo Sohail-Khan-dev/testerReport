@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Gate;
 class IsAdmin
 {
     /**
-     * Handle an incoming request.
+     * This is the middleware used for Control the traffic according to the request
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
