@@ -15,7 +15,7 @@ Route::get('/', function () {
         else if(Gate::allows('user'))
             return redirect()->route('reporting');
     }
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
