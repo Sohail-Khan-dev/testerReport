@@ -10,13 +10,16 @@ use Illuminate\Support\Facades\Gate;
 
 Route::get('/', function () {
     if(Auth::check()){
+//        dd('here we are : ' , auth()->user()->role);
+
         if(Gate::allows('is-admin'))
             return redirect()->route('dashboard');
-        else if(Gate::allows('user'))
+        if(Gate::allows('is-user')) {
             return redirect()->route('reporting');
+        }
     }
     return redirect()->route('login');
-});
+})->name('home');
 
 Route::get('/dashboard', function () {
     if(Gate::allows('is-admin'))

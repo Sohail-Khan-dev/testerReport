@@ -48,7 +48,7 @@
                             <select id='role' name="role" class="form-select" aria-label="Default select example" required>
                                 <option value="" selected>Role</option>
                                 <option value="admin">Admin</option>
-                                <option value="manager">Manager</option>
+{{--                                <option value="manager">Manager</option>--}}
                                 <option value="user">User</option>
                             </select>
                         </div>

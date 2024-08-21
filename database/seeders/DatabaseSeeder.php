@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Ali',
             'email' => 'ali@email.com',
             'password' => Hash::make('$2y$12$Qtguzy4eaDUJsODmmKi4e.YQirnzS1jaMuP3ek/ABBqIWG7ikeUau'),
-            'role' => 'manager'
+            'role' => 'admin'
         ]);
         Project::factory()->create([
             'name' => 'Un roads'
@@ -46,6 +46,6 @@ class DatabaseSeeder extends Seeder
         Project::factory()->create([
             'name' => 'Inj distribution'
         ]);
-        
+
     }
 }

@@ -36,9 +36,8 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Total</th>
-                                <th>User </th>
-                                <th>Project</th>
+                                <th></th>
+                                <th> </th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -46,8 +45,9 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                                <th>No sum </th>
-                                <th>No Summation </th>
+                                <th></th>
+                                <th> </th>
+                                <th> </th>
                             </tr>
                         </tfoot>
                     </table>
@@ -128,6 +128,10 @@
                             <div class="form-group-checkbox">
                                 <label for="daily_meeting">Daily Meeting</label>
                                 <input type="checkbox" id="daily_meeting" name="daily_meeting" value="1">
+                            </div>
+                            <div class="form-group-checkbox">
+                                <label for="mobile_testing">Mobile Testing</label>
+                                <input type="checkbox" id="mobile_testing" name="mobile_testing" value="1">
                             </div>
                             <div class="form-group-checkbox">
                                 <label for="mobile_testing">Mobile Testing</label>
