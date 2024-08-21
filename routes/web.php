@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/login-direct/{id}', [RegisteredUserController::class, 'directLogin'])->name('user.destroy');
         // Below is for the User  Routes We have to Update the profile routes and Use this for User
         Route::get('/users',[RegisteredUserController::class,'index'])->name('users');
+        Route::get('/edit-user',[RegisteredUserController::class,'edit'])->name('users.edit');
         Route::get('/get-user',[RegisteredUserController::class,'getAllUser'])->name('users.data');
 
         Route::get('/projects',[ProjectController::class,'index'])->name('projects');

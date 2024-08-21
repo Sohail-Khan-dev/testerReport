@@ -137,7 +137,7 @@
                         <div class="">
                             <div class="form-group w-100">
                                 <label for="description">Description</label>
-                                <textarea type="text" class="form-control" id="description" name='description' rows="3"> </textarea>
+                                <textarea type="text" class="form-control" id="description" name='description' rows="3" placeholder="Enter your task and reported bug ID"></textarea>
                             </div>
 
                         </div>

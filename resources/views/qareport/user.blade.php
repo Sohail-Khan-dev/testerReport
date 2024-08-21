@@ -1,7 +1,8 @@
 <style>
     .users-button-div a{
-        margin-left:4px ;
-        margin-right: 4px;
+        margin-left: .5rem ;
+        margin-right: .5rem;
+        max-width: 7rem;
     }
 </style>
 <x-app-layout>
@@ -67,6 +68,59 @@
                 window.location.href = '/login-direct/'+userId;
             }
         });
+
+        $("#add-user-form").on('submit',function (e){
+            e.preventDefault();
+            console.log("Submit is Called ");
+            let passwordVal = $("#password").val();
+            let confirmVal = $("#password_confirmation").val();
+            console.log(passwordVal , confirmVal );
+            if(passwordVal == confirmVal){
+                let formData = new FormData(this);
+                console.log('passwords matches', formData);
+                $.ajax({
+                    url : '{{ route('register.new')}}' ,
+                    method : 'POST',
+                    data: new FormData(this),
+                    processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                    contentType: false,
+                    success : function (response){
+                        console.log('Success Response is : ' , response);
+                        $('#close-modal').click();
+                        $('#add-user-form')[0].reset();
+                        $('#user-table').DataTable().ajax.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error Response is:', error);
+                    }
+                });
+            }else {
+                alert('Password does not matched');
+                console.log("confirm Password is not correct ")
+            }
+
+        })
+        $(document).on('click','#edit-user',function (e){
+           e.preventDefault();
+          let id = $(this).data('id');
+            // alert(id);
+          $.ajax({
+              url : '/edit-user',
+              method : 'GET',
+              data : {id : id},
+              success : function (response){
+                  console.log("Response is : " , response.user['name'],response.user['email'],response.user['role']);
+                  $('#id').val(response.user['id']);
+                  $('#name').val(response.user['name']);
+                  $('#email').val(response.user['email']);
+                  $('#role').val(response.user['role']);
+                  $('#name').text(response.user['name']);
+                  $('#email').text(response.user['email']);
+                 $('#modal-center').modal('show')
+
+              }
+          });
+        });
         loadUsers();
         function loadUsers(){
           if($.fn.dataTable.isDataTable('#user-table')){
@@ -85,36 +139,5 @@
               ]
           });
       }
-        $("#add-user-form").on('submit',function (e){
-        e.preventDefault();
-        console.log("Submit is Called ");
-        let passwordVal = $("#password").val();
-        let confirmVal = $("#password_confirmation").val();
-        console.log(passwordVal , confirmVal );
-        if(passwordVal == confirmVal){
-            let formData = new FormData(this);
-            console.log('passwords matches', formData);
-            $.ajax({
-                url : '{{ route('register.new')}}' ,
-                method : 'POST',
-                data: new FormData(this),
-                processData: false, // Prevent jQuery from automatically transforming the data into a query string
-                contentType: false,
-                success : function (response){
-                    console.log('Success Response is : ' , response);
-                    $('#close-modal').click();
-                    $('#add-user-form')[0].reset();
-                    $('#user-table').DataTable().ajax.reload();
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error Response is:', error);
-                }
-            });
-        }else {
-            alert('Password does not matched');
-            console.log("confirm Password is not correct ")
-        }
-
-    })
     });
 </script>
