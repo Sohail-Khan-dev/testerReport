@@ -64,7 +64,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
         if($request->id){
-            dump('Here is updated User');
+            //dump('Here is updated User');
             $user = User::find($request->id);
 
             if($user){
