@@ -39,6 +39,7 @@ class UserReportController extends Controller
             'daily_meeting' => $request->input('daily_meeting'),
             'mobile_testing' => $request->input('mobile_testing'),
             'description' => $request->input('description'),
+            'automation' => $request->input('automation'),
         ]);
         return response()->json(['success' => true,'record' => $report]);
     }
@@ -51,7 +52,7 @@ class UserReportController extends Controller
     public function getData()
     {
         $reports = UserReport::with(['user', 'project'])->select(['date','user_id','project_id','task_tested','bug_reported','regression','smoke_testing','client_meeting',
-                                    'daily_meeting','mobile_testing','other','description']);
+                                    'daily_meeting','mobile_testing','other','description','automation']);
         if (Gate::denies('is-admin')) {   // if Not admin then below code witll run
             // User is not an admin
             $reports->where('user_id',auth()->user()->id)    // This will get only the logedIn user Records

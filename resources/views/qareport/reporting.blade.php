@@ -27,6 +27,7 @@
                                 <th> Client Meeting</th>
                                 <th> Daily Meeting</th>
                                 <th> Mobile Testing</th>
+                                <th> Automation Testing</th>
                                 <th> Other</th>
                                 <th> Description</th>
                             </tr>
@@ -46,6 +47,7 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
+                                <th> </th>
                                 <th> </th>
                                 <th> </th>
                             </tr>
@@ -134,8 +136,8 @@
                                 <input type="checkbox" id="mobile_testing" name="mobile_testing" value="1">
                             </div>
                             <div class="form-group-checkbox">
-                                <label for="mobile_testing">Mobile Testing</label>
-                                <input type="checkbox" id="mobile_testing" name="mobile_testing" value="1">
+                                <label for="automation">Automation Testing</label>
+                                <input type="checkbox" id="automation" name="automation" value="1">
                             </div>
                         </div>
                         <div class="">
@@ -210,6 +212,7 @@
                     {  data: 'client_meeting', name: 'client_meeting' },
                     {   data: 'daily_meeting', name: 'daily_meeting' },
                     {   data: 'mobile_testing', name: 'mobile_testing' },
+                    {   data: 'automation', name: 'automation' },
                     {   data: 'other', name: 'other' },
                     {   data: 'description', name: 'description' },
 

@@ -23,7 +23,8 @@ return new class extends Migration
             $table->integer('client_meeting')->nullable();
             $table->integer('daily_meeting')->nullable();
             $table->integer('mobile_testing')->nullable();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
+            $table->integer('automation')->nullable();
             $table->string('other')->nullable()->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('created_at')->nullable();
