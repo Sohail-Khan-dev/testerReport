@@ -20,16 +20,17 @@
                                 <th> Date</th>
                                 <th> Name</th>
                                 <th> Project</th>
-                                <th> Tasks Tested</th>
-                                <th> Bugs Testing</th>
-                                <th> Regression Testing</th>
-                                <th> Smoke Testing</th>
-                                <th> Client Meeting</th>
-                                <th> Daily Meeting</th>
-                                <th> Mobile Testing</th>
-                                <th> Automation Testing</th>
+                                <th> Tasks<br>Tested</th>
+                                <th> Bugs<br>Testing</th>
+                                <th> Regression<br>Testing</th>
+                                <th> Smoke<br>Testing</th>
+                                <th> Client<br> Meeting</th>
+                                <th> Daily <br>Meeting</th>
+                                <th> Mobile <br>Testing</th>
+                                <th> Automation <br>Testing</th>
                                 <th> Other</th>
                                 <th> Description</th>
+                                <th> Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -193,6 +194,25 @@
             autoclose: true,
             todayHighlight: true
         });
+        $(document).on('click','.deleteReport',function (e){
+            e.preventDefault();
+            let reportId = $(this).data('id');
+            console.log('Report id is : ' + reportId);
+            let url = '/report/'+reportId;
+            if(confirm("Do you want to delete this Report?")){
+                $.ajax({
+                    url: url,
+                    type:'DELETE',
+                    data:{
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function (response){
+                        $('#reports-table').DataTable().ajax.reload();
+                      alert(response.message);
+                    },
+                });
+            }
+        });
         function loadReportData(){
             if ($.fn.DataTable.isDataTable('#reports-table')) {
                 $('#reports-table').DataTable().clear().destroy();
@@ -220,6 +240,7 @@
                     {   data: 'automation', name: 'automation' },
                     {   data: 'other', name: 'other' },
                     {   data: 'description', name: 'description' },
+                    {   data: 'action', name: 'action' },
 
                 ],
                 drawCallback: function() {

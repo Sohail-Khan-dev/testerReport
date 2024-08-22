@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/report',[UserReportController::class,'store'])->name('user-reports.update');
     Route::get('/reporting',[UserReportController::class,'index'])->name('reporting');
     Route::get('/reports',[UserReportController::class,'getData'])->name('reports.data');
+    Route::delete('/report/{id}', [UserReportController::class, 'destroy'])->name('report.destroy');
 
 
 });

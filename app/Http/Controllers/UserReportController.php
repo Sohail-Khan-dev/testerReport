@@ -48,10 +48,16 @@ class UserReportController extends Controller
         $projects = Project::all();
         return view('qareport.reporting',compact(['users','projects']));
     }
+    public function destroy($id){
+        if(UserReport::destroy($id))
+        return response()->json(['success'=>true,'message' =>'Report deleted successfully.']);
+    else
+        return response()->json(['success'=>false, 'message'=>'Fail to delete report']);
 
+    }
     public function getData()
     {
-        $reports = UserReport::with(['user', 'project'])->select(['date','user_id','project_id','task_tested','bug_reported','regression','smoke_testing','client_meeting',
+        $reports = UserReport::with(['user', 'project'])->select(['id','date','user_id','project_id','task_tested','bug_reported','regression','smoke_testing','client_meeting',
                                     'daily_meeting','mobile_testing','other','description','automation']);
         if (Gate::denies('is-admin')) {   // if Not admin then below code witll run
             // User is not an admin
@@ -76,6 +82,10 @@ class UserReportController extends Controller
             })
             ->addColumn('project_name', function($report) {
                 return $report->project->name;
+            })
+            ->addColumn('action',function($report){
+                $delete = '<i class="deleteReport fa-trash fa-solid f-18" data-id="'.$report->id.'"> </i>';
+                return $delete;
             })
             ->make(true);
     }
