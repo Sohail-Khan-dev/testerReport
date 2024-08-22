@@ -89,7 +89,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="date">Date</label>
-                                <input type="date" class="form-control datepicker" id="date" name="date" value="{{ date('Y-m-d') }}">
+                                <input type="date" class="form-control" id="date" name="date" value="{{ date('Y-m-d') }}">
                             </div>
                             <div class="form-group">
                                 <label for="project_id">Select Project</label>
@@ -189,11 +189,7 @@
             })
             .catch(error => console.error('Error: ', error));
         });
-        $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
-            autoclose: true,
-            todayHighlight: true
-        });
+   
         $(document).on('click','.deleteReport',function (e){
             e.preventDefault();
             let reportId = $(this).data('id');
