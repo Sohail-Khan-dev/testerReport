@@ -88,7 +88,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="date">Date</label>
-                                <input type="date" class="form-control" id="date" name="date" value="{{ date('Y-m-d') }}" readonly>
+                                <input type="date" class="form-control datepicker" id="date" name="date" value="{{ date('Y-m-d') }}">
                             </div>
                             <div class="form-group">
                                 <label for="project_id">Select Project</label>
@@ -187,6 +187,11 @@
                 }
             })
             .catch(error => console.error('Error: ', error));
+        });
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
         });
         function loadReportData(){
             if ($.fn.DataTable.isDataTable('#reports-table')) {
