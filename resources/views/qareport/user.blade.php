@@ -42,25 +42,58 @@
 </x-app-layout>
 <script>
     $(document).ready(function() {
-        $(document).on('click','.deleteUser',function (e){
-            e.preventDefault();
-            let userId = $(this).data('id');
-            console.log('User id is : ' + userId);
-            let url = '/user/'+userId;
-            if(confirm("Do you want to delete this user?")){
-                $.ajax({
-                    url: url,
-                    type:'DELETE',
-                    data:{
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function (response){
-                        $('#user-table').DataTable().ajax.reload();
-                      alert(response.message);
-                    },
-                });
-            }
-        });
+        $(document).on('click', '.deleteUser', function (e) {
+    e.preventDefault();
+    let userId = $(this).data('id');
+    let url = '/user/' + userId;
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to delete this user?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+        customClass: {
+            confirmButton: 'btn btn-danger ml-3', // Custom class for confirm button
+            cancelButton: 'btn btn-secondary mr-3' // Custom class for cancel button
+        },
+        buttonsStyling: false // Disable SweetAlert2 default styles for buttons
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    $('#user-table').DataTable().ajax.reload(); // Reload DataTable after deletion
+                    Swal.fire(
+                        'Deleted!',
+                        response.message,
+                        'success'
+                    );
+                },
+                error: function (xhr) {
+                    Swal.fire(
+                        'Error!',
+                        'There was an issue deleting the user.',
+                        'error'
+                    );
+                }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire(
+                'Cancelled',
+                'The user is safe :)',
+                'error'
+            );
+        }
+    });
+});
+
         $(document).on('click', '.loginUser', function (){
             let userId = $(this).data('id');
             console.log('User id is : ' + userId);

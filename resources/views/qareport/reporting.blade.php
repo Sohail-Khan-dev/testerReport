@@ -190,25 +190,57 @@
             .catch(error => console.error('Error: ', error));
         });
    
-        $(document).on('click','.deleteReport',function (e){
-            e.preventDefault();
-            let reportId = $(this).data('id');
-            console.log('Report id is : ' + reportId);
-            let url = '/report/'+reportId;
-            if(confirm("Do you want to delete this Report?")){
-                $.ajax({
-                    url: url,
-                    type:'DELETE',
-                    data:{
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function (response){
-                        $('#reports-table').DataTable().ajax.reload();
-                      alert(response.message);
-                    },
-                });
-            }
-        });
+        $(document).on('click', '.deleteReport', function (e) {
+    e.preventDefault();
+    let reportId = $(this).data('id');
+    let url = '/report/' + reportId;
+    Swal.fire({
+        title: "Want to Delete?",
+        text: "This will delete the selected Report!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+        customClass: {
+            confirmButton: 'btn btn-danger ml-3', // Custom class for confirm button
+            cancelButton: 'btn btn-secondary mr-2' // Custom class for cancel button
+        },
+        buttonsStyling: false // Disable SweetAlert2 default styles for buttons
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    $('#reports-table').DataTable().ajax.reload();
+                    Swal.fire(
+                        'Deleted!',
+                        response.message,
+                        'success'
+                    );
+                },
+                error: function (xhr) {
+                    Swal.fire(
+                        'Error!',
+                        'There was an issue deleting the report.',
+                        'error'
+                    );
+                }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire(
+                'Cancelled',
+                'Your report is safe :)',
+                'error'
+            );
+        }
+    });
+});
+
         function loadReportData(){
             if ($.fn.DataTable.isDataTable('#reports-table')) {
                 $('#reports-table').DataTable().clear().destroy();
