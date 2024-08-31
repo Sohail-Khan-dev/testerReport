@@ -65,8 +65,8 @@
             <div class="modal-content">
                 <div class="modal-header d-flex justify-between h5">
                     <h5 class="modal-title" id="longTitle">Daily Tasks Done</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" id="closeModalbtn">
-                        <span aria-hidden="true">&times;</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalbtn">
+                        <!-- <span aria-hidden="true">&times;</span> -->
                     </button>
                 </div>
                 <div class="modal-body">
@@ -113,7 +113,6 @@
                                 <label for="other">Other</label>
                                 <input type="text" class="form-control" id="other" name="other">
                             </div>
-
                         </div>
                         <div class="d-flex justify-between align-items-center flex-row">
                             <div class="form-group-checkbox">
@@ -142,20 +141,19 @@
                                 <input type="checkbox" id="automation" name="automation" value="1">
                             </div>
                         </div>
-                        <div class="">
+                        <div>
                             <div class="form-group w-100">
                                 <label for="description">Description</label>
                                 <textarea type="text" class="form-control" id="description" name='description' rows="3" placeholder="Enter your task and reported bug ID"></textarea>
                             </div>
-
                         </div>
+                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary report-form-submit">Submit</button>
+                    </div>
+                 </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary report-form-submit">Submit</button>
-                </div>
-                </form>
-            </div>
         </div>
     </div>
     </div>

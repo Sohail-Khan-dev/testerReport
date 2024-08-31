@@ -3,8 +3,7 @@
         <div class="modal-content">
             <div class="modal-header d-flex justify-between h5">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add New User</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" id="close-modal">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal">
                 </button>
             </div>
             <div class="modal-body">
