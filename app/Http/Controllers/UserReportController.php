@@ -65,7 +65,7 @@ class UserReportController extends Controller
                 ->whereDate('date', today())->get();      // This will get only today Records .
 
         }
-
+        $reports->orderBy("created_at",'desc');
         return DataTables::of($reports)
         ->filterColumn('user_name', function($query, $keyword) {
             $query->whereHas('user', function($query) use ($keyword) {

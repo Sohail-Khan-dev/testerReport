@@ -152,7 +152,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary report-form-submit">Submit</button>
                 </div>
                 </form>
             </div>
@@ -166,7 +166,7 @@
         $('#reportForm').on('submit', function(e) {
             e.preventDefault(); // Prevent the default form submission
             let formData = new FormData(this);
-
+            $('.report-form-submit').addClass('disabled');
             fetch('{{ route('user-reports.store') }}', {
                 method: 'POST',
                 body: formData,
@@ -181,6 +181,7 @@
                     $('#report-input-modal').modal('hide');
                     $('#closeModalbtn').click();
                     $('#reportForm')[0].reset();
+                    $('.report-form-submit').removeClass('disabled');
                     loadReportData();
                 } else {
                     // Handle validation errors
