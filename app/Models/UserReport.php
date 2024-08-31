@@ -21,7 +21,7 @@ class UserReport extends Model
         'daily_meeting',
         'mobile_testing',
         'description',
-    
+        'automation'
     ];
 
     public function user(){

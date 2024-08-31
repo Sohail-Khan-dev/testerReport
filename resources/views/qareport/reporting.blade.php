@@ -16,12 +16,12 @@
                 <div class="table-container py-2 px-2">
                     <table id="reports-table" class="table table-striped table-bordered" style="width:100%">
                         <thead>
-                            <tr>
+                            <tr class="text-center">
                                 <th> Date</th>
                                 <th> Name</th>
                                 <th> Project</th>
                                 <th> Tasks<br>Tested</th>
-                                <th> Bugs<br>Testing</th>
+                                <th> Bugs<br>Reported</th>
                                 <th> Regression<br>Testing</th>
                                 <th> Smoke<br>Testing</th>
                                 <th> Client<br> Meeting</th>
@@ -33,11 +33,11 @@
                                 <th> Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="text-center">
 
                         </tbody>
                         <tfoot>
-                            <tr>
+                            <tr class="text-center">
                                 <th></th>
                                 <th> </th>
                                 <th></th>
@@ -48,6 +48,7 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
+                                <th> </th>
                                 <th> </th>
                                 <th> </th>
                                 <th> </th>
@@ -163,7 +164,6 @@
     $(document).ready(function() {
         loadReportData();
         $('#reportForm').on('submit', function(e) {
-           console.log("Form is submitted ")
             e.preventDefault(); // Prevent the default form submission
             let formData = new FormData(this);
 
