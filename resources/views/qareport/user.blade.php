@@ -142,7 +142,7 @@
               method : 'GET',
               data : {id : id},
               success : function (response){
-                  console.log("Response is : " , response.user['name'],response.user['email'],response.user['role']);
+                //   console.log("Response is : " , response.user['name'],response.user['email'],response.user['role']);
                   $('#id').val(response.user['id']);
                   $('#name').val(response.user['name']);
                   $('#email').val(response.user['email']);

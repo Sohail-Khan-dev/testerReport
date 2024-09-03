@@ -8,7 +8,7 @@
                         @can('is-user') {{ __("Today Report") }}@endcan
                     </div>
                     <div>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-input-modal">
+                        <button type="button" class="btn btn-primary addTask" data-bs-toggle="modal" data-bs-target="#report-input-modal">
                             Add Task
                         </button>
                     </div>
@@ -60,103 +60,7 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="report-input-modal" tabindex="-1" role="dialog" aria-labelledby="report-input-modalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header d-flex justify-between h5">
-                    <h5 class="modal-title" id="longTitle">Daily Tasks Done</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalbtn">
-                        <!-- <span aria-hidden="true">&times;</span> -->
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="reportForm"> {{-- action="{{ route('user-reports.store') }}" method="POST">--}}
-                        @csrf
-                        <div class="row row-cols-2">
-                            @if(auth()->user()->role != 'admin' && auth()->user()->role != 'manager')
-                            <div class="form-group ">
-                                <label for="user_id">Employee Name sdf </label>
-                                <input id="user_id" type="text" readonly value="{{ auth()->user()->name}}">
-                            @else
-                            <div class="form-group ">
-                                <label for="user_id">Select Employee</label>
-                                <select class="form-control" id="user_id" name="user_id" required>
-                                    <option value="">Choose Employee</option>
-                                    @foreach ($users as $user)
-                                    <option value="{{$user->id}}">{{$user->name}}</option>
-                                    @endforeach
-                                </select>
-                            @endif
-                            </div>
-                            <div class="form-group">
-                                <label for="date">Date</label>
-                                <input type="date" class="form-control" id="date" name="date" value="{{ date('Y-m-d') }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="project_id">Select Project</label>
-                                <select class="form-control" id="project_id" name="project_id" required>
-                                    <option value="" selected> Select Project</option>
-                                    @foreach($projects as $project)
-                                    <option value="{{$project->id}}">{{$project->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="task_tested">Task Tested</label>
-                                <input type="number" class="form-control" id="task_tested" name="task_tested" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="bug_reported">Bug Reported</label>
-                                <input type="number" class="form-control" id="bug_reported" name="bug_reported">
-                            </div>
-                            <div class="form-group">
-                                <label for="other">Other</label>
-                                <input type="text" class="form-control" id="other" name="other">
-                            </div>
-                        </div>
-                        <div class="d-flex justify-between align-items-center flex-row">
-                            <div class="form-group-checkbox">
-                                <label for="regression">Regression testing</label>
-                                <input type="checkbox" id="regression" name="regression" value="1">
-                            </div>
-                            <div class="form-group-checkbox">
-                                <label for="smoke_testing">Smoke Testing</label>
-                                <input type="checkbox" id="smoke_testing" name="smoke_testing" value="1">
-                            </div>
-                            <div class="form-group-checkbox">
-                                <label for="client_meeting">Client Meeting</label>
-                                <input type="checkbox" id="client_meeting" name="client_meeting" value="1">
-                            </div>
-
-                            <div class="form-group-checkbox">
-                                <label for="daily_meeting">Daily Meeting</label>
-                                <input type="checkbox" id="daily_meeting" name="daily_meeting" value="1">
-                            </div>
-                            <div class="form-group-checkbox">
-                                <label for="mobile_testing">Mobile Testing</label>
-                                <input type="checkbox" id="mobile_testing" name="mobile_testing" value="1">
-                            </div>
-                            <div class="form-group-checkbox">
-                                <label for="automation">Automation Testing</label>
-                                <input type="checkbox" id="automation" name="automation" value="1">
-                            </div>
-                        </div>
-                        <div>
-                            <div class="form-group w-100">
-                                <label for="description">Description</label>
-                                <textarea type="text" class="form-control" id="description" name='description' rows="3" placeholder="Enter your task and reported bug ID"></textarea>
-                            </div>
-                        </div>
-                        </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary report-form-submit">Submit</button>
-                    </div>
-                 </form>
-                </div>
-        </div>
-    </div>
-    </div>
+   @include('modals.add-tester-report')
 </x-app-layout>
 <script>
     $(document).ready(function() {
@@ -165,17 +69,25 @@
             e.preventDefault(); // Prevent the default form submission
             let formData = new FormData(this);
             $('.report-form-submit').addClass('disabled');
-            fetch('{{ route('user-reports.store') }}', {
+            fetch("{{ route('user-reports.store') }}", {
                 method: 'POST',
                 body: formData,
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                // Check if the response is in JSON format
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    // Handle non-JSON response (e.g., HTML error page)
+                    return response.text().then(text => { throw new Error('Invalid JSON: ' + text); });
+                }
+            })
             .then(data => {
                 if (data.success) {
-
                     $('#report-input-modal').modal('hide');
                     $('#closeModalbtn').click();
                     $('#reportForm')[0].reset();
@@ -187,58 +99,100 @@
                 }
             })
             .catch(error => console.error('Error: ', error));
+            $('.report-form-submit').removeClass('disabled'); 
         });
    
         $(document).on('click', '.deleteReport', function (e) {
-    e.preventDefault();
-    let reportId = $(this).data('id');
-    let url = '/report/' + reportId;
-    Swal.fire({
-        title: "Want to Delete?",
-        text: "This will delete the selected Report!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true,
-        customClass: {
-            confirmButton: 'btn btn-danger ml-3', // Custom class for confirm button
-            cancelButton: 'btn btn-secondary mr-2' // Custom class for cancel button
-        },
-        buttonsStyling: false // Disable SweetAlert2 default styles for buttons
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                data: {
-                    _token: '{{ csrf_token() }}'
+            e.preventDefault();
+            let reportId = $(this).data('id');
+            let url = '/report/' + reportId;
+            Swal.fire({
+                title: "Want to Delete?",
+                text: "This will delete the selected Report!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true,
+                customClass: {
+                    confirmButton: 'btn btn-danger ml-3', // Custom class for confirm button
+                    cancelButton: 'btn btn-secondary mr-2' // Custom class for cancel button
                 },
-                success: function (response) {
-                    $('#reports-table').DataTable().ajax.reload();
+                buttonsStyling: false // Disable SweetAlert2 default styles for buttons
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function (response) {
+                            $('#reports-table').DataTable().ajax.reload();
+                            Swal.fire(
+                                'Deleted!',
+                                response.message,
+                                'success'
+                            );
+                        },
+                        error: function (xhr) {
+                            Swal.fire(
+                                'Error!',
+                                'There was an issue deleting the report.',
+                                'error'
+                            );
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
                     Swal.fire(
-                        'Deleted!',
-                        response.message,
-                        'success'
-                    );
-                },
-                error: function (xhr) {
-                    Swal.fire(
-                        'Error!',
-                        'There was an issue deleting the report.',
+                        'Cancelled',
+                        'Your report is safe :)',
                         'error'
                     );
                 }
             });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            Swal.fire(
-                'Cancelled',
-                'Your report is safe :)',
-                'error'
-            );
-        }
-    });
-});
+        });
+        $(document).on("click",".editReport", function(e){
+            e.preventDefault();
+            let id = $(this).data('id');
+            var userRole = "{{ auth()->user()->role }}";
+            console.log('user role ' , userRole);
+            
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url : "{{route('user-reports.update')}}",
+                method : 'patch',
+                data : {id:id},
+                success : function (response){
+                    console.log(response[1]);
+                    var report = response[1];
+                    $("#report-input-modal").modal('show'); 
+                    console.log('user Id ' + report['id']);     
+                          // Set values using .val() for input fields
+                    $("#id").val(report['id']);
+                    if(userRole != 'user')
+                        $('#user_id').val(report['user_id']);
+                    $("#project_id").val(report['project_id']);
+                    $("#task_tested").val(report['task_tested']);
+                    $("#bug_reported").val(report['bug_reported']);
+                    $("#other").val(report['other']);
+                    $("#description").val(report['description']);
+
+                    // Set values for checkboxes using .prop()
+                    $("#regression").prop('checked', report['regression']);
+                    $("#smoke_testing").prop('checked', report['smoke_testing']);
+                    $("#client_meeting").prop('checked', report['client_meeting']);
+                    $("#daily_meeting").prop('checked', report['daily_meeting']);
+                    $("#mobile_testing").prop('checked', report['mobile_testing']);
+                    $("#automation").prop('checked', report['automation']);
+                }
+            })
+        });
 
         function loadReportData(){
             if ($.fn.DataTable.isDataTable('#reports-table')) {
@@ -311,5 +265,9 @@
                 }
             });
         }
+        $('#report-input-modal').on('hidden.bs.modal', function () {
+            $('#reportForm')[0].reset();
+            $('.report-form-submit').removeClass('disabled');
+        });
     });
 </script>

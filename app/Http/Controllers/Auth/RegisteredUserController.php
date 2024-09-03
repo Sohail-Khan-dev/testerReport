@@ -121,10 +121,10 @@ class RegisteredUserController extends Controller
         return datatables($users)
             ->addColumn('action',function ($row){
 
-                $buttons = '<a href="' . route('profile.edit', $row->id) . '" class="" id="edit-user" data-id='.$row->id.'><i class="fa-regular fa-pen-to-square f-2x f-18 "></i></a>';
+                $buttons = '<a href="' . route('profile.edit', $row->id) . '" class="" id="edit-user" data-id='.$row->id.'><i class="fa-regular fa-pen-to-square f-2x f-18 cursor-pointer"></i></a>';
                 if($row->id != auth()->user()->id) {
-                    $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="deleteUser"><i class="fa-solid fa-trash f-18"></i></a>';
-                    $buttons .= '<a href="javascript:void(0)" data-id="'.$row->id.'"   class="loginUser"><i class="fa fa-sign-in f-18" aria-hidden="true"></i></a>';
+                    $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="deleteUser"><i class="fa-solid fa-trash f-18 cursor-pointer"></i></a>';
+                    $buttons .= '<a href="javascript:void(0)" data-id="'.$row->id.'"   class="loginUser"><i class="fa fa-sign-in f-18 cursor-pointer" aria-hidden="true"></i></a>';
                 }
                 // Enable/Disable toggle (You can use a condition to display the correct state)
 //                if ($row->is_active) {
