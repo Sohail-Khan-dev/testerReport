@@ -1,4 +1,16 @@
 <x-app-layout>
+<style> 
+    .description{
+        text-wrap: nowrap;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .description:hover{
+        text-wrap: wrap;
+        max-width: 300px;
+    }
+</style>
     <div class="py-12">
         <div class="px-4">
             <div class="bg-white ">
