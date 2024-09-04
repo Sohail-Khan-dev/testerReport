@@ -9,7 +9,16 @@
   width: 50%;
   margin-bottom: .5rem !important;
 }
-
+.description{
+  text-wrap: nowrap;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.description:hover{
+  text-wrap: wrap;
+  max-width: 300px;
+}
 .form-group-checkbox {
   align-items: center;
   justify-content: end;

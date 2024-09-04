@@ -169,10 +169,10 @@
                 method : 'patch',
                 data : {id:id},
                 success : function (response){
-                    console.log(response[1]);
+                    // console.log(response[1]);
                     var report = response[1];
                     $("#report-input-modal").modal('show'); 
-                    console.log('user Id ' + report['id']);     
+                    // console.log('user Id ' + report['id']);     
                           // Set values using .val() for input fields
                     $("#id").val(report['id']);
                     if(userRole != 'user')
@@ -223,6 +223,14 @@
                     {   data: 'description', name: 'description' },
                     {   data: 'action', name: 'action' },
 
+                ],
+                columnDefs: [
+                    {
+                        targets: 12, // The index of the 'description' column
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).addClass('description'); // Add your class here
+                        }
+                    }
                 ],
                 drawCallback: function() {
                     var api = this.api();
