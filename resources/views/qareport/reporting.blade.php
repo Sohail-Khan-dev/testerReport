@@ -1,12 +1,12 @@
 <x-app-layout>
 <style> 
-    .description{
+    .column-width-height{
         text-wrap: nowrap;
         max-width: 200px;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .description:hover{
+    .column-width-height:hover{
         text-wrap: wrap;
         max-width: 300px;
     }
@@ -238,11 +238,11 @@
                 ],
                 columnDefs: [
                     {
-                        targets: 12, // The index of the 'description' column
+                        targets: [0,12], // The index of the 'description' column
                         createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).addClass('description'); // Add your class here
+                            $(td).addClass('column-width-height'); // Add your class here
                         }
-                    }
+                    },
                 ],
                 drawCallback: function() {
                     var api = this.api();
