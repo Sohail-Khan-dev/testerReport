@@ -52,7 +52,8 @@ class UserReportController extends Controller
     }
     public function index(){
         $users = User::all();
-        $projects = Project::all();
+        $projects = auth()->user()->projects;
+        // dd($projects);
         return view('qareport.reporting',compact(['users','projects']));
     }
     public function destroy($id){

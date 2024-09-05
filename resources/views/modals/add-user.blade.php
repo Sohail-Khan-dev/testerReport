@@ -43,11 +43,18 @@
                             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                         </div>
                         <div class="mt-4">
+                            <label for="projects">Select Projects</label>
+                            <select name="project_ids[]" id="projects" multiple>
+                                @foreach($projects as $project)
+                                    <option value="{{ $project->id }}">{{ $project->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mt-4">
                             <x-input-label for="role" :value="__('Role')" />
                             <select id='role' name="role" class="form-select" aria-label="Default select example" required>
                                 <option value="" selected>Role</option>
                                 <option value="admin">Admin</option>
-{{--                                <option value="manager">Manager</option>--}}
                                 <option value="user">User</option>
                             </select>
                         </div>

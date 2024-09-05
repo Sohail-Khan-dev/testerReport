@@ -96,7 +96,7 @@
 
         $(document).on('click', '.loginUser', function (){
             let userId = $(this).data('id');
-            console.log('User id is : ' + userId);
+            // console.log('User id is : ' + userId);
             if(confirm('Are you sure to login this user?')){
                 window.location.href = '/login-direct/'+userId;
             }
@@ -104,15 +104,15 @@
 
         $("#add-user-form").on('submit',function (e){
             e.preventDefault();
-            console.log("Submit is Called ");
+            // console.log("Submit is Called ");
             let passwordVal = $("#password").val();
             let confirmVal = $("#password_confirmation").val();
-            console.log(passwordVal , confirmVal );
+            // console.log(passwordVal , confirmVal );
             if(passwordVal == confirmVal){
                 let formData = new FormData(this);
                 console.log('passwords matches', formData);
                 $.ajax({
-                    url : '{{ route('register.new')}}' ,
+                    url : "{{ route('register.new')}}" ,
                     method : 'POST',
                     data: new FormData(this),
                     processData: false, // Prevent jQuery from automatically transforming the data into a query string
@@ -172,5 +172,19 @@
               ]
           });
       }
+    });
+
+    new MultiSelectTag('projects', {
+        rounded: true,    // default true
+        shadow: true,      // default false
+        placeholder: 'Search',  // default Search...
+        tagColor: {
+            textColor: '#327b2c',
+            borderColor: '#92e681',
+            bgColor: '#eaffe6',
+        },
+        onChange: function(values) {
+            console.log(values)
+}
     });
 </script>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Project;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -72,6 +73,7 @@ class RegisteredUserController extends Controller
                 $user->email = $request->email;
                 $user->password = Hash::make($request->password);
                 $user->role = $request->role;
+                $user->projects()->sync($request->project_ids);
                 $user->save();
             }else{
                return response()->json(['success'=>false,'message'=>'No user Found']);
@@ -89,7 +91,8 @@ class RegisteredUserController extends Controller
 
     }
     public function index(){
-        return view('qareport.user');
+        $projects = Project::all();
+        return view('qareport.user',compact('projects'));
     }
     public function destroy($id): JsonResponse
     {
