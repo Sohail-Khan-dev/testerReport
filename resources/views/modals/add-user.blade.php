@@ -1,12 +1,12 @@
 <div class="modal fade" id="modal-center" tabindex="-1" role="dialog" aria-labelledby="modal-centerTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header d-flex justify-between h5">
-                <h5 class="modal-title" id="exampleModalLongTitle">Add New User</h5>
+            <div class="modal-header">
+                <h5 class="modal-title w-100 text-center text-xl" id="add-user-title">Add New User</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal">
                 </button>
             </div>
-            <div class="modal-body">
+            <div class>
                 <x-guest-layout>
                     <form id="add-user-form"> {{-- method="POST" action="{{ route('register.new') }}">--}}
                         @csrf
@@ -30,8 +30,10 @@
                             <x-input-label for="password" :value="__('Password')" />
 
                             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" minlength="8" required autocomplete="new-password" />
-
-                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                            <button type="button" class="btn togglePassword absolute" style="right: 5.80rem; top:24.8rem;">
+                                Show
+                            </button>
+                            
                         </div>
 
                         <!-- Confirm Password -->
@@ -64,7 +66,7 @@
 {{--                                {{ __('Already registered?') }}--}}
 {{--                            </a>--}}
 
-                            <x-primary-button class="ms-4">
+                            <x-primary-button class="ms-4" id="add-user-submit">
                                 {{ __('Register') }}
                             </x-primary-button>
                         </div>

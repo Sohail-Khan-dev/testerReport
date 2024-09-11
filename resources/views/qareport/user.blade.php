@@ -14,7 +14,7 @@
                         {{ __("All QA's Report") }}
                     </div>
                     <div>
-                        <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modal-center">
+                        <button type="button" class="btn btn-primary" id="add-user-button"  data-bs-toggle="modal" data-bs-target="#modal-center">
                             Add User
                         </button>
                     </div>
@@ -43,82 +43,96 @@
 <script>
     $(document).ready(function() {
         $(document).on('click', '.deleteUser', function (e) {
-    e.preventDefault();
-    let userId = $(this).data('id');
-    let url = '/user/' + userId;
+            e.preventDefault();
+            let userId = $(this).data('id');
+            let url = '/user/' + userId;
 
-    Swal.fire({
-        title: "Are you sure?",
-        text: "Do you want to delete this user?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true,
-        customClass: {
-            confirmButton: 'btn btn-danger ml-3', // Custom class for confirm button
-            cancelButton: 'btn btn-secondary mr-3' // Custom class for cancel button
-        },
-        buttonsStyling: false // Disable SweetAlert2 default styles for buttons
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                data: {
-                    _token: '{{ csrf_token() }}'
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you want to delete this user?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true,
+                customClass: {
+                    confirmButton: 'btn btn-danger ml-3', // Custom class for confirm button
+                    cancelButton: 'btn btn-secondary mr-3' // Custom class for cancel button
                 },
-                success: function (response) {
-                    $('#user-table').DataTable().ajax.reload(); // Reload DataTable after deletion
+                buttonsStyling: false, // Disable SweetAlert2 default styles for buttons
+                
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        beforeSend :function(){
+                            showLoading();
+                        },
+                        success: function (response) {
+                            hideLoading();
+                            $('#user-table').DataTable().ajax.reload(); // Reload DataTable after deletion
+                        },
+                        error: function (xhr) {
+                            Swal.fire(
+                                'Error!', 'There was an issue deleting the user.', 'error'
+                            );
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
                     Swal.fire(
-                        'Deleted!',
-                        response.message,
-                        'success'
-                    );
-                },
-                error: function (xhr) {
-                    Swal.fire(
-                        'Error!',
-                        'There was an issue deleting the user.',
-                        'error'
+                        'Cancelled','The user is safe :)','error'
                     );
                 }
             });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            Swal.fire(
-                'Cancelled',
-                'The user is safe :)',
-                'error'
-            );
-        }
-    });
-});
+        });
 
         $(document).on('click', '.loginUser', function (){
             let userId = $(this).data('id');
-            // console.log('User id is : ' + userId);
-            if(confirm('Are you sure to login this user?')){
-                window.location.href = '/login-direct/'+userId;
-            }
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Are you sure you want to log in as this user?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, Log in!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true,
+                customClass: {
+                    confirmButton: 'btn btn-danger ml-3', // Custom class for confirm button
+                    cancelButton: 'btn btn-secondary mr-3' // Custom class for cancel button
+                },
+                buttonsStyling: false, // Disable SweetAlert2 default styles for buttons
+                
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/login-direct/'+userId;
+                }
+            });
         });
-
+        $("#add-user-button").on('click',function(){
+            $("#add-user-title").text('Add New User');
+            $('#add-user-submit').text('Register');
+        });
         $("#add-user-form").on('submit',function (e){
             e.preventDefault();
-            // console.log("Submit is Called ");
             let passwordVal = $("#password").val();
             let confirmVal = $("#password_confirmation").val();
-            // console.log(passwordVal , confirmVal );
             if(passwordVal == confirmVal){
                 let formData = new FormData(this);
-                console.log('passwords matches', formData);
                 $.ajax({
                     url : "{{ route('register.new')}}" ,
                     method : 'POST',
                     data: new FormData(this),
                     processData: false, // Prevent jQuery from automatically transforming the data into a query string
                     contentType: false,
+                    beforeSend:function(){
+                        showLoading();
+                    },
                     success : function (response){
-                        console.log('Success Response is : ' , response);
+                        hideLoading();
                         $('#close-modal').click();
                         $('#add-user-form')[0].reset();
                         $('#user-table').DataTable().ajax.reload();
@@ -128,30 +142,67 @@
                     }
                 });
             }else {
-                alert('Password does not matched');
+                Swal.fire(
+                    'Error!', 'The password does not match!', 'error'
+                );
+                // alert('Password does not matched');
                 console.log("confirm Password is not correct ")
             }
 
-        })
+        }); 
+        $('.togglePassword').on('click',function(){
+            let passwordInput =  $('#password');
+            if(passwordInput.attr('type') === 'password'){
+                passwordInput.attr('type',"text");
+                $(this).text('Hide');
+            }
+            else if(passwordInput.attr('type') === 'text') {
+                passwordInput.attr('type',"password");
+                $(this).text('Show');
+            }
+
+        });
         $(document).on('click','#edit-user',function (e){
            e.preventDefault();
           let id = $(this).data('id');
-            // alert(id);
           $.ajax({
               url : '/edit-user',
               method : 'GET',
               data : {id : id},
-              success : function (response){
-                //   console.log("Response is : " , response.user['name'],response.user['email'],response.user['role']);
-                  $('#id').val(response.user['id']);
-                  $('#name').val(response.user['name']);
-                  $('#email').val(response.user['email']);
-                  $('#role').val(response.user['role']);
-                  $('#name').text(response.user['name']);
-                  $('#email').text(response.user['email']);
-                 $('#modal-center').modal('show')
+              beforeSend : function(){
+                showLoading();
+              },
+              success : function (response){ 
+                hideLoading();
+                // $('#projects').val([]);
+                $('#id').val(response.user['id']);
+                $('#name').val(response.user['name']);
+                $('#email').val(response.user['email']);
+                $('#role').val(response.user['role']);
+                $('#name').text(response.user['name']);
+                $('#email').text(response.user['email']);
+                // $('#projects').val(response.projects).trigger('change');
+        
+                $('#projects').next('.mult-select-tag').remove(); // Assumes the container is added after the select element
 
-              }
+                // Reset the project select field
+                $('#projects').val([]);  // Clear existing selections
+
+                // Assign the new values
+                $("#projects").val(response.projects);
+
+                // Reinitialize the multi-select plugin
+                new MultiSelectTag('projects');  // Assuming you already initialized it somewhere
+
+                $("#add-user-title").text('Update User');
+                $('#add-user-submit').text('Update');
+                $('#modal-center').modal('show')
+
+              },
+              error: function() {
+                // Hide loading SVG even on error
+                $('#loadingModal').hide();
+            }
           });
         });
         loadUsers();
@@ -160,18 +211,26 @@
               $('#user-table').DataTable().clear().destroy();
           }
           $('#user-table').DataTable({
-              processing: true,
-              serverSide: true,
-              dom: '<"top"f> rt<"bottom"ip><"clear">',
-              ajax: '{{ route("users.data") }}',
-              columns: [
-                  { data: 'name', name: 'name' },
-                  { data: 'email', name: 'email' },
-                  { data: 'role', name: 'role' },
-                  { data: 'action', name: 'action'}
-              ]
-          });
-      }
+                processing: true,
+                serverSide: true,
+                dom: '<"top"f> rt<"bottom"ip><"clear">',
+                ajax: {
+                    url:'{{ route("users.data") }}',
+                    beforeSend:function(){
+                        showLoading(true);
+                    },
+                    complete : function(){
+                        hideLoading();
+                    }
+                },
+                columns: [
+                    { data: 'name', name: 'name' },
+                    { data: 'email', name: 'email' },
+                    { data: 'role', name: 'role' },
+                    { data: 'action', name: 'action'}
+                ]
+            });
+        }
     });
 
     new MultiSelectTag('projects', {
@@ -185,6 +244,6 @@
         },
         onChange: function(values) {
             console.log(values)
-}
+       }
     });
 </script>

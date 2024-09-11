@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header d-flex justify-between h5">
-                <h5 class="modal-title" id="exampleModalLongTitle">Add New Project</h5>
+                <h5 class="modal-title" id="add-project-title">Add New Project</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal">
                     <span aria-hidden="true">&times;</span>
                 </button>

@@ -79,6 +79,7 @@
         loadReportData();
         $('#reportForm').on('submit', function(e) {
             e.preventDefault(); // Prevent the default form submission
+            showLoading();
             let formData = new FormData(this);
             $('.report-form-submit').addClass('disabled');
             fetch("{{ route('user-reports.store') }}", {
@@ -86,7 +87,7 @@
                 body: formData,
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
+                },
             })
             .then(response => {
                 // Check if the response is in JSON format
@@ -104,7 +105,8 @@
                     $('#closeModalbtn').click();
                     $('#reportForm')[0].reset();
                     $('.report-form-submit').removeClass('disabled');
-                    loadReportData();
+                    hideLoading();
+                    $('#reports-table').DataTable().ajax.reload();
                 } else {
                     // Handle validation errors
                     console.log(data.errors);
@@ -140,13 +142,17 @@
                         data: {
                             _token: '{{ csrf_token() }}'
                         },
+                        beforeSend: function(){
+                            showLoading();
+                        },
                         success: function (response) {
                             $('#reports-table').DataTable().ajax.reload();
-                            Swal.fire(
-                                'Deleted!',
-                                response.message,
-                                'success'
-                            );
+                            hideLoading();
+                            // Swal.fire(
+                            //     'Deleted!',
+                            //     response.message,
+                            //     'success'
+                            // );
                         },
                         error: function (xhr) {
                             Swal.fire(
@@ -169,7 +175,6 @@
             e.preventDefault();
             let id = $(this).data('id');
             var userRole = "{{ auth()->user()->role }}";
-            console.log('user role ' , userRole);
             
             $.ajaxSetup({
                 headers: {
@@ -180,12 +185,14 @@
                 url : "{{route('user-reports.update')}}",
                 method : 'patch',
                 data : {id:id},
+                beforeSend: function(){
+                    showLoading();
+                }, 
                 success : function (response){
-                    // console.log(response[1]);
+                    hideLoading();
                     var report = response[1];
                     $("#report-input-modal").modal('show'); 
-                    // console.log('user Id ' + report['id']);     
-                          // Set values using .val() for input fields
+                    // Set values using .val() for input fields
                     $("#id").val(report['id']);
                     if(userRole != 'user')
                         $('#user_id').val(report['user_id']);
@@ -211,14 +218,22 @@
                 $('#reports-table').DataTable().clear().destroy();
             }
             $('#reports-table').DataTable({
-                processing: true,
+                // processing: true,
                 serverSide: true,
                 dom : '<"top" f> rtlp',
                 scrollX:true,
                 scrollY: '60vh',  // We can fix the height of the dataTable.
                 scrollCollapse: true,
                 paging: true,
-                ajax: '{{ route("reports.data") }}',
+                ajax: { 
+                    url : '{{ route("reports.data") }}',
+                    beforeSend: function(){
+                        showLoading(true);
+                    },
+                    complete : function(){
+                        hideLoading();
+                    }
+                },
                 columns: [
                     {  data: 'date', name: 'date' },
                     { data: 'user_name', name: 'user_name', orderable: false, searchable: true },
@@ -278,9 +293,8 @@
                     // Copy the width of the header columns to the footer columns
                     let api = this.api();
                     $(api.columns().footer()).each(function(i) {
-                        let c =  $(this).width($(api.column(i).header()).width());
-                        // debugger
-                        //  console.log(c)
+                        $(this).css('width', $(api.column(i).header()).width());
+                        // let c =  $(this).width($(api.column(i).header()).width());
                     });
                 }
             });

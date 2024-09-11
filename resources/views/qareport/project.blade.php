@@ -36,10 +36,11 @@
         loadProject();
         $('#projectForm').on('submit', function (e) {
             console.log("Form is submitted ");
+            showLoading();
             e.preventDefault(); // Prevent the default form submission
             let formData = new FormData(this);
 
-            fetch('{{ route('project.store') }}', {
+            fetch("{{ route('project.store') }}", {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -49,7 +50,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        console.log('success ')
+                        hideLoading();
                         $('#close-modal').click();
                         $('#projectForm')[0].reset();
                         loadProject();
@@ -65,10 +66,19 @@
                 $('#project-table').DataTable().clear().destroy();
             }
             $('#project-table').DataTable({
-                processing: true,
+                // processing: true,
                 serverSide: true,
                 dom: '<"top"f> rt<"bottom"ip><"clear">',
-                ajax: '{{ route("project.data") }}',
+                ajax: {
+                   url: '{{ route("project.data") }}',
+                   beforeSend :function(){
+                    showLoading(true);
+                   },
+                   complete : function(){
+                    hideLoading();
+                   }
+                
+                },
                 columns: [
                     { data: 'name', name: 'name' },
                     { data: 'description', name: 'description' }

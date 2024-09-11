@@ -103,7 +103,8 @@ class RegisteredUserController extends Controller
     }
     public function edit(Request $request){
         $user = User::findOrFail($request->id);
-        return response()->json(['user'=>$user]);
+        $projects = $user->projects()->pluck('projects.id');
+        return response()->json(['user'=>$user, 'projects'=>$projects]);
     }
 
     public function directLogin($id): RedirectResponse

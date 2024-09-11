@@ -33,6 +33,7 @@
             <!-- Page Content -->
             <main>
                 {{ $slot }}
+               @include('modals.loading')
             </main>
         </div>
     </div>
@@ -42,6 +43,25 @@
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/js/multi-select-tag.js"></script>
+    <script> 
+        function showLoading(isDataTable=false){
+            $("#loadingModal").modal({
+                backdrop: 'static',  // Prevent closing when clicking outside
+                keyboard: false      // Disable closing with the "Esc" key
+            }).modal('show');
+            if(isDataTable){
+                $("#loadingSvg").addClass('d-none');
+                $(".loader").removeClass('d-none');
+            }
+            else{
+                $("#loadingSvg").removeClass('d-none');
+                $(".loader").addClass('d-none');
+            }
+        }
+        function hideLoading(){
+            $('#loadingModal').modal('hide');
+        }
+    </script>
 </body>
 
 </html>
