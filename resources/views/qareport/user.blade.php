@@ -113,6 +113,13 @@
             });
         });
         $("#add-user-button").on('click',function(){
+            $('#add-user-form')[0].reset();
+            $('#projects').next('.mult-select-tag').remove(); // Assumes the container is added after the select element
+                // Reset the project select field
+                $('#projects').val([]);  // Clear existing selections
+                // Assign the new values
+                $("#projects").val();
+                new MultiSelectTag('projects');
             $("#add-user-title").text('Add New User');
             $('#add-user-submit').text('Register');
         });
@@ -181,13 +188,10 @@
                 $('#role').val(response.user['role']);
                 $('#name').text(response.user['name']);
                 $('#email').text(response.user['email']);
-                // $('#projects').val(response.projects).trigger('change');
         
                 $('#projects').next('.mult-select-tag').remove(); // Assumes the container is added after the select element
-
                 // Reset the project select field
                 $('#projects').val([]);  // Clear existing selections
-
                 // Assign the new values
                 $("#projects").val(response.projects);
 
