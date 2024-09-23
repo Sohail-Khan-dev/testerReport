@@ -77,6 +77,7 @@
                             $('#user-table').DataTable().ajax.reload(); // Reload DataTable after deletion
                         },
                         error: function (xhr) {
+                            hideLoading();
                             Swal.fire(
                                 'Error!', 'There was an issue deleting the user.', 'error'
                             );
@@ -145,6 +146,7 @@
                         $('#user-table').DataTable().ajax.reload();
                     },
                     error: function(xhr, status, error) {
+                        hideLoading();
                         console.error('Error Response is:', error);
                     }
                 });
@@ -204,6 +206,7 @@
 
               },
               error: function() {
+                hideLoading();
                 // Hide loading SVG even on error
                 $('#loadingModal').hide();
             }

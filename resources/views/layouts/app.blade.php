@@ -45,6 +45,8 @@
     <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/js/multi-select-tag.js"></script>
     <script> 
         function showLoading(isDataTable=false){
+            console.log("Show Loading ");
+            
             $("#loadingModal").modal({
                 backdrop: 'static',  // Prevent closing when clicking outside
                 keyboard: false      // Disable closing with the "Esc" key
@@ -59,6 +61,8 @@
             }
         }
         function hideLoading(){
+            console.log("hide Loading ");
+            
             $('#loadingModal').modal('hide');
         }
     </script>

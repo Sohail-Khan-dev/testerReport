@@ -155,6 +155,7 @@
                             // );
                         },
                         error: function (xhr) {
+                            hideLoading();
                             Swal.fire(
                                 'Error!',
                                 'There was an issue deleting the report.',
@@ -209,6 +210,10 @@
                     $("#daily_meeting").prop('checked', report['daily_meeting']);
                     $("#mobile_testing").prop('checked', report['mobile_testing']);
                     $("#automation").prop('checked', report['automation']);
+                },
+                error : function(xhr,status){
+                    console.log("Error " + status );
+                    hideLoading();
                 }
             })
         });
