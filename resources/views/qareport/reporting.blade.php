@@ -1,5 +1,5 @@
 <x-app-layout>
-<style> 
+<style>
     .column-width-height{
         text-wrap: nowrap;
         max-width: 200px;
@@ -81,7 +81,7 @@
             e.preventDefault(); // Prevent the default form submission
             showLoading();
             let formData = new FormData(this);
-            $('.report-form-submit').addClass('disabled');
+            $('.report-form-submit').prop('disabled', true);
             fetch("{{ route('user-reports.store') }}", {
                 method: 'POST',
                 body: formData,
@@ -104,18 +104,18 @@
                     $('#report-input-modal').modal('hide');
                     $('#closeModalbtn').click();
                     $('#reportForm')[0].reset();
-                    $('.report-form-submit').removeClass('disabled');
+                    $('.report-form-submit').prop('disabled', false);
                     hideLoading();
                     $('#reports-table').DataTable().ajax.reload();
                 } else {
                     // Handle validation errors
                     console.log(data.errors);
+                    $('.report-form-submit').prop('disabled', false);
                 }
             })
             .catch(error => console.error('Error: ', error));
-            $('.report-form-submit').removeClass('disabled'); 
         });
-   
+
         $(document).on('click', '.deleteReport', function (e) {
             e.preventDefault();
             let reportId = $(this).data('id');
@@ -176,7 +176,7 @@
             e.preventDefault();
             let id = $(this).data('id');
             var userRole = "{{ auth()->user()->role }}";
-            
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -188,11 +188,11 @@
                 data : {id:id},
                 beforeSend: function(){
                     showLoading();
-                }, 
+                },
                 success : function (response){
                     hideLoading();
                     var report = response[1];
-                    $("#report-input-modal").modal('show'); 
+                    $("#report-input-modal").modal('show');
                     // Set values using .val() for input fields
                     $("#id").val(report['id']);
                     if(userRole != 'user')
@@ -217,6 +217,17 @@
                 }
             })
         });
+        $('#task_tested, #bug_reported').on('input', function() {
+            console.log("INput Value : ");
+
+            let value = $(this).val();
+            // Allow only positive integers
+            if (value < 1) {
+                $(this).val('');
+            } else {
+                $(this).val(Math.floor(value)); // Ensure it's an integer
+            }
+        });
 
         function loadReportData(){
             if ($.fn.DataTable.isDataTable('#reports-table')) {
@@ -230,7 +241,7 @@
                 scrollY: '60vh',  // We can fix the height of the dataTable.
                 scrollCollapse: true,
                 paging: true,
-                ajax: { 
+                ajax: {
                     url : '{{ route("reports.data") }}',
                     beforeSend: function(){
                         showLoading(true);
