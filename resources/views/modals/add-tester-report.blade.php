@@ -42,7 +42,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="task_tested">Task Tested</label>
-                                <input type="number" class="form-control" id="task_tested" name="task_tested" required>
+                                <input type="number" class="form-control" id="task_tested" name="task_tested">
                             </div>
                             <div class="form-group">
                                 <label for="bug_reported">Bug Reported</label>

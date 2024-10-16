@@ -218,11 +218,9 @@
             })
         });
         $('#task_tested, #bug_reported').on('input', function() {
-            console.log("INput Value : ");
-
             let value = $(this).val();
             // Allow only positive integers
-            if (value < 1) {
+            if (value < 0) {
                 $(this).val('');
             } else {
                 $(this).val(Math.floor(value)); // Ensure it's an integer
