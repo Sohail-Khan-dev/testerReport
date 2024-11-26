@@ -10,13 +10,22 @@
         text-wrap: wrap;
         max-width: 300px;
     }
+    #reports-table_filter{
+        margin: .5rem;
+    }
+    #reports-table_filter label{
+        margin-top: -0.5rem;
+    }
+    #reports-table_filter input{
+        border-radius: .5rem;
+    }
 </style>
     <div class="py-12">
         <div class="px-4">
             <div class="bg-white ">
                 <div class="outer d-flex justify-between align-items-center px-4 border-bottom">
                     <div class="p-6 text-gray-900 d-flex justify-center w-75 font-semibold text-2xl">
-                       @can('is-admin')  {{ __("All QA's Report") }}@endcan
+                       @can('is-admin')  {{ __("All QA's Reports") }}@endcan
                         @can('is-user') {{ __("Today Report") }}@endcan
                     </div>
                     <div>
@@ -25,7 +34,18 @@
                         </button>
                     </div>
                 </div>
-                <div class="table-container py-2 px-2">
+                {{-- @dump($dateOptions) --}}
+                <div class="table-container py-2 px-2" >
+                    <select class="form-select rounded-3 w-auto position-absolute z-50" style="margin-bottom: -3rem" id="date-filter">
+                        <option value="Selected" selected disabled>--- Select date ---</option>
+                        <option value="{{ $dateOptions['today'] }}">Today </option>
+                        <option value="{{ $dateOptions['yesterday'] }}">Yesterday</option>
+                        <option value="{{ $dateOptions['last3Days'] }}">Last 3 days</option>
+                        <option value="{{ $dateOptions['last7Days'] }}">Last 7 days</option>
+                        <option value="{{ $dateOptions['last15Days'] }}">Last 15 days </option>
+                        <option value="{{ $dateOptions['last30Days'] }}">Last 30 days </option>
+                    </select>
+            
                     <table id="reports-table" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr class="text-center">
@@ -294,14 +314,13 @@
                     const totalDailyMeeting = sumColumn(8);
                     const totalMobile = sumColumn(9);
 
-
-                    $(api.column(3).footer()).html(totalTasks);
-                    $(api.column(4).footer()).html(totalBugs);
-                    $(api.column(5).footer()).html(totalRegression);
-                    $(api.column(6).footer()).html(totalSmoke);
-                    $(api.column(7).footer()).html( totalClientMeeting);
-                    $(api.column(8).footer()).html( totalDailyMeeting);
-                    $(api.column(9).footer()).html(totalMobile);
+                    $(api.column(3).footer()).html(totalTasks !== undefined ? totalTasks : '0');
+                    $(api.column(4).footer()).html(totalBugs !== undefined ? totalBugs : '0');
+                    $(api.column(5).footer()).html(totalRegression !== undefined ? totalRegression : '0');
+                    $(api.column(6).footer()).html(totalSmoke !== undefined ? totalSmoke : '0');
+                    $(api.column(7).footer()).html( totalClientMeeting !== undefined ? totalClientMeeting : '0');
+                    $(api.column(8).footer()).html( totalDailyMeeting !== undefined ? totalDailyMeeting : '0');
+                    $(api.column(9).footer()).html(totalMobile !== undefined ? totalMobile : '0');
                 },
                 initComplete: function (settings, json) {
                     // Copy the width of the header columns to the footer columns
@@ -310,12 +329,21 @@
                         $(this).css('width', $(api.column(i).header()).width());
                         // let c =  $(this).width($(api.column(i).header()).width());
                     });
+                },
+                search: {
+                    search: $("#date-filter").val() // Set the default search term here (e.g., today's date or specific date)
                 }
             });
         }
         $('#report-input-modal').on('hidden.bs.modal', function () {
             $('#reportForm')[0].reset();
             $('.report-form-submit').removeClass('disabled');
+        });
+
+        // Handle change event of the date filter
+        $('#date-filter').on('change', function() {
+          loadReportData();
+          $("#reports-table_filter input").val('');
         });
     });
 </script>

@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\UserReport;
 use Illuminate\Http\Request;
-use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Gate;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserReportController extends Controller
 {
@@ -51,8 +52,8 @@ class UserReportController extends Controller
     public function index(){
         $users = User::all();
         $projects = auth()->user()->projects;
-        // dd($projects);
-        return view('qareport.reporting',compact(['users','projects']));
+        $dateOptions = $this->getDateOptions();
+        return view('qareport.reporting',compact(['users','projects','dateOptions']));
     }
     public function destroy($id){
         if(UserReport::destroy($id))
@@ -100,5 +101,17 @@ class UserReportController extends Controller
             })
             ->make(true);
     }
-
+    public function getDateOptions()
+    {
+        return [
+            'today' => Carbon::today()->toDateString(), // e.g., '2024-11-24'
+            'yesterday' => Carbon::yesterday()->toDateString(), // e.g., '2024-11-23'
+            'last3Days' => Carbon::today()->subDays(2)->toDateString(), // 2 days ago (including today makes it 3 days)
+            'last7Days' => Carbon::today()->subDays(6)->toDateString(), // 6 days ago (including today makes it 7 days)
+            'last15Days' => Carbon::today()->subDays(14)->toDateString(), // 14 days ago
+            'last30Days' => Carbon::today()->subDays(29)->toDateString(), // 29 days ago
+        ];
+    }
+    
+    
 }
