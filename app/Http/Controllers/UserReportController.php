@@ -65,15 +65,17 @@ class UserReportController extends Controller
         $report = UserReport::findOrFail($request->id);
         return response()->json(['report', $report]);
     }
-    public function getData()
+    public function getData(Request $request)
     {
         $reports = UserReport::with(['user', 'project'])->select(['id','date','user_id','project_id','task_tested','bug_reported','regression','smoke_testing','client_meeting',
                                     'daily_meeting','mobile_testing','other','description','automation']);
         if (Gate::denies('is-admin')) {   // if Not admin then below code witll run
             // User is not an admin
             $reports->where('user_id',auth()->user()->id)    // This will get only the logedIn user Records
-                ->whereDate('date', today())->get();      // This will get only today Records .
-
+                ->whereDate('date', today());      // This will get only today Records .
+        }else{
+            if($request->from_date !== null && $request->to_date !== null)
+                $reports->whereBetween('date',[$request->from_date,$request->to_date]);
         }
         $reports->orderBy("created_at",'desc');
         return DataTables::of($reports)
@@ -87,19 +89,19 @@ class UserReportController extends Controller
                 $query->where('name', 'like', "%{$keyword}%");
             });
         })
-            ->addColumn('user_name', function($report) {
-                return $report->user->name;
-            })
-            ->addColumn('project_name', function($report) {
-                return $report->project->name;
-            })
-            ->addColumn('action',function($report){
-                $actions = '<i class="deleteReport fa-trash fa-solid f-18 cursor-pointer" data-id="'.$report->id .'"> </i>';
-                $actions .= '<i class="editReport ml-2 fa-regular fa-pen-to-square f-2x f-18 cursor-pointer" data-id="'.$report->id .'"> </i>';
+        ->addColumn('user_name', function($report) {
+            return $report->user->name;
+        })
+        ->addColumn('project_name', function($report) {
+            return $report->project->name;
+        })
+        ->addColumn('action',function($report){
+            $actions = '<i class="deleteReport fa-trash fa-solid f-18 cursor-pointer" data-id="'.$report->id .'"> </i>';
+            $actions .= '<i class="editReport ml-2 fa-regular fa-pen-to-square f-2x f-18 cursor-pointer" data-id="'.$report->id .'"> </i>';
 
-                return $actions;
-            })
-            ->make(true);
+            return $actions;
+        })
+        ->make(true);
     }
     public function getDateOptions()
     {

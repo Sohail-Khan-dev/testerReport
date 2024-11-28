@@ -19,6 +19,28 @@
     #reports-table_filter input{
         border-radius: .5rem;
     }
+    .table-container .dates input{
+        border-radius: .5rem;
+    }
+    .table-container .dates{
+        margin-bottom: -2.5rem;
+        margin-top: 0.5rem;
+    }
+    .dataTables_wrapper{
+        margin: 0px 0 16px 8px;
+    }
+    #reports-table_length{
+        margin-top: .75rem; 
+    }
+    #reports-table_length select{
+        border-radius: .75rem; 
+    }
+    #reports-table_paginate .paginate_button.current{
+        border-radius: 0.5rem;
+    }
+    #reports-table_paginate .paginate_button.current{
+        margin-top: 0.5rem;
+    }
 </style>
     <div class="py-12">
         <div class="px-4">
@@ -36,16 +58,24 @@
                 </div>
                 {{-- @dump($dateOptions) --}}
                 <div class="table-container py-2 px-2" >
-                    <select class="form-select rounded-3 w-auto position-absolute z-50" style="margin-bottom: -3rem" id="date-filter">
-                        <option value="Selected" selected disabled>--- Select date ---</option>
-                        <option value="{{ $dateOptions['today'] }}">Today </option>
-                        <option value="{{ $dateOptions['yesterday'] }}">Yesterday</option>
-                        <option value="{{ $dateOptions['last3Days'] }}">Last 3 days</option>
-                        <option value="{{ $dateOptions['last7Days'] }}">Last 7 days</option>
-                        <option value="{{ $dateOptions['last15Days'] }}">Last 15 days </option>
-                        <option value="{{ $dateOptions['last30Days'] }}">Last 30 days </option>
-                    </select>
-            
+                    <div class="dates d-flex gap-4">
+                        <select class="form-select w-auto rounded-3 z-3 relative" id="date-filter">
+                            <option value="Selected" selected disabled>--- Select date ---</option>
+                            <option value="{{ $dateOptions['today'] }}">Today </option>
+                            <option value="{{ $dateOptions['yesterday'] }}">Yesterday</option>
+                            <option value="{{ $dateOptions['last3Days'] }}">Last 3 days</option>
+                            <option value="{{ $dateOptions['last7Days'] }}">Last 7 days</option>
+                            <option value="{{ $dateOptions['last15Days'] }}">Last 15 days </option>
+                            <option value="{{ $dateOptions['last30Days'] }}">Last 30 days </option>
+                        </select>
+                        <div class="z-3">
+                            <label for="from-date">Date From:</label>
+                            <input type="date" id="from-date" name="from-date">
+                            <label for="to-date">Date To:</label>
+                            <input type="date" id="to-date" name="to-date">
+                            <button type="button" class="btn btn-success mb-1 ml-3 rounded-3" id='date-search-btn'>Search</button>
+                        </div>
+                    </div>
                     <table id="reports-table" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr class="text-center">
@@ -96,7 +126,6 @@
 </x-app-layout>
 <script>
     $(document).ready(function() {
-        loadReportData();
         $('#reportForm').on('submit', function(e) {
             e.preventDefault(); // Prevent the default form submission
             showLoading();
@@ -246,7 +275,9 @@
                 $(this).val(Math.floor(value)); // Ensure it's an integer
             }
         });
-
+        let from_date = '';
+        let to_date = '';
+        loadReportData();
         function loadReportData(){
             if ($.fn.DataTable.isDataTable('#reports-table')) {
                 $('#reports-table').DataTable().clear().destroy();
@@ -261,6 +292,10 @@
                 paging: true,
                 ajax: {
                     url : '{{ route("reports.data") }}',
+                    data: function (d) {
+                        d.from_date = from_date;
+                        d.to_date = to_date;
+                    },
                     beforeSend: function(){
                         showLoading(true);
                     },
@@ -330,9 +365,7 @@
                         // let c =  $(this).width($(api.column(i).header()).width());
                     });
                 },
-                search: {
-                    search: $("#date-filter").val() // Set the default search term here (e.g., today's date or specific date)
-                }
+              
             });
         }
         $('#report-input-modal').on('hidden.bs.modal', function () {
@@ -341,9 +374,55 @@
         });
 
         // Handle change event of the date filter
-        $('#date-filter').on('change', function() {
-          loadReportData();
-          $("#reports-table_filter input").val('');
+        $('#date-filter').on('change', function() {  
+            const date = new Date();
+            const todayDate = date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+            date.setDate(date.getDate() - 1); // Subtract 1 day
+            const yesterdayDate = date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+
+            from_date = $(this).val();
+            if (yesterdayDate === from_date)
+                to_date = yesterdayDate;  // Same dates 1 day
+            else
+                to_date = todayDate; // Set current date to the from Date field 
+            loadReportData();
         });
+        $('#date-search-btn').click( function() {
+            console.log("Clicked on search Btton");
+            from_date = $('#from-date').val();
+            to_date = $('#to-date').val();
+            loadReportData();
+        });
+        // function datesSearhesHtml(){
+        //     const filterHtml = `
+        //         <div class="dates row gx-3 gy-2">
+        //             <div class="col-md-4 col-12">
+        //                 <select class="form-select rounded-3" id="date-filter">
+        //                     <option value="Selected" selected disabled>--- Select date ---</option>
+        //                     <option value="{{ $dateOptions['today'] }}">Today</option>
+        //                     <option value="{{ $dateOptions['yesterday'] }}">Yesterday</option>
+        //                     <option value="{{ $dateOptions['last3Days'] }}">Last 3 days</option>
+        //                     <option value="{{ $dateOptions['last7Days'] }}">Last 7 days</option>
+        //                     <option value="{{ $dateOptions['last15Days'] }}">Last 15 days</option>
+        //                     <option value="{{ $dateOptions['last30Days'] }}">Last 30 days</option>
+        //                 </select>
+        //             </div>
+        //             <div class="col-md-8 col-12">
+        //                 <div class="d-flex flex-wrap align-items-center">
+        //                     <div class="me-2">
+        //                         <label for="from-date" class="form-label mb-0">Date From:</label>
+        //                         <input type="date" id="from-date" name="from-date" class="form-control">
+        //                     </div>
+        //                     <div class="me-2">
+        //                         <label for="to-date" class="form-label mb-0">Date To:</label>
+        //                         <input type="date" id="to-date" name="to-date" class="form-control">
+        //                     </div>
+        //                     <button type="button" class="btn btn-success rounded-3" id="date-search-btn">Search</button>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     `;
+        //     return filterHtml;
+        // }
     });
 </script>
