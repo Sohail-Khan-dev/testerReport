@@ -83,7 +83,7 @@
                         </div>
                         <div class="z-3">
                             <label for="user-name">Users</label>
-                            <select class="form-select w-auto rounded-3 z-3" id="user-name" name="user-name" style="padding: 6px; ">
+                            <select class="form-select w-auto rounded-3 z-3" id="user-name" name="user-name" style="padding: 6px; max-width:6rem;">
                                 <option value="">Choose</option>
                                 @foreach ($users as $user)
                                     <option value="{{$user->id}}">{{$user->name}}</option>
