@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Project;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\UserReport;
@@ -52,8 +54,9 @@ class UserReportController extends Controller
     public function index(){
         $users = User::all();
         $projects = auth()->user()->projects;
+        $allprojects = Project::all();
         $dateOptions = $this->getDateOptions();
-        return view('qareport.reporting',compact(['users','projects','dateOptions']));
+        return view('qareport.reporting',compact(['users','projects','dateOptions','allprojects']));
     }
     public function destroy($id){
         if(UserReport::destroy($id))

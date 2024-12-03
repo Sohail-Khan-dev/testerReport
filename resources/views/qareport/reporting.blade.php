@@ -92,9 +92,9 @@
                         </div>
                         <div class="z-3">
                             <label for="project-name">Projects</label>
-                            <select class="form-select w-auto rounded-3 z-3" id="project-name" name="project-name" style="padding: 6px; ">
+                            <select class="form-select w-auto rounded-3 z-3" id="project-name" name="project-name" style="padding: 6px 30px 6px 2px;">
                                 <option value="">Choose</option>
-                                @foreach($projects as $project)
+                                @foreach($allprojects as $project)
                                     <option value="{{$project->id}}">{{$project->name}}</option>
                                 @endforeach
                             </select>
