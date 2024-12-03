@@ -2,7 +2,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header d-flex justify-between h5">
-                    <h5 class="modal-title" id="longTitle">Daily Tasks Done</h5>
+                    <h5 class="modal-title w-100 text-center text-2xl " id="longTitle">Daily Tasks Done</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalbtn">
                         <!-- <span aria-hidden="true">&times;</span> -->
                     </button>

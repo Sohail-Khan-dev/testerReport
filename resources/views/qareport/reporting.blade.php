@@ -41,6 +41,15 @@
     #reports-table_paginate .paginate_button.current{
         margin-top: 0.5rem;
     }
+    input, .form-control, textarea{ 
+        border-radius: .5rem !important;
+        margin-top: .25rem;
+    }
+    .modal-footer{
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
 </style>
     <div class="py-12">
         <div class="px-4">
@@ -57,25 +66,52 @@
                     </div>
                 </div>
                 {{-- @dump($dateOptions) --}}
-                <div class="table-container py-2 px-2" >
-                    <div class="dates d-flex gap-4">
-                        <select class="form-select w-auto rounded-3 z-3 relative" id="date-filter">
-                            <option value="Selected" selected disabled>--- Select date ---</option>
-                            <option value="{{ $dateOptions['today'] }}">Today </option>
-                            <option value="{{ $dateOptions['yesterday'] }}">Yesterday</option>
-                            <option value="{{ $dateOptions['last3Days'] }}">Last 3 days</option>
-                            <option value="{{ $dateOptions['last7Days'] }}">Last 7 days</option>
-                            <option value="{{ $dateOptions['last15Days'] }}">Last 15 days </option>
-                            <option value="{{ $dateOptions['last30Days'] }}">Last 30 days </option>
-                        </select>
+                <div class="table-container px-2 " >
+                    @can('is-admin')
+                    <div class="dates d-flex gap-2">
+                        <div class="">
+                            <label for="date-filter">Date</label>                    
+                            <select class="form-select w-auto rounded-3 z-3 relative" id="date-filter" style="padding: 6px;">
+                                <option value="Selected" selected disabled>Select</option>
+                                <option value="{{ $dateOptions['today'] }}">Today </option>
+                                <option value="{{ $dateOptions['yesterday'] }}">Yesterday</option>
+                                <option value="{{ $dateOptions['last3Days'] }}">Last 3 days</option>
+                                <option value="{{ $dateOptions['last7Days'] }}">Last 7 days</option>
+                                <option value="{{ $dateOptions['last15Days'] }}">Last 15 days </option>
+                                <option value="{{ $dateOptions['last30Days'] }}">Last 30 days </option>
+                            </select>
+                        </div>
                         <div class="z-3">
-                            <label for="from-date">Date From:</label>
-                            <input type="date" id="from-date" name="from-date">
-                            <label for="to-date">Date To:</label>
-                            <input type="date" id="to-date" name="to-date">
-                            <button type="button" class="btn btn-success mb-1 ml-3 rounded-3" id='date-search-btn'>Search</button>
+                            <label for="user-name">Users</label>
+                            <select class="form-select w-auto rounded-3 z-3" id="user-name" name="user-name" style="padding: 6px; ">
+                                <option value="">Choose</option>
+                                @foreach ($users as $user)
+                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="z-3">
+                            <label for="project-name">Projects</label>
+                            <select class="form-select w-auto rounded-3 z-3" id="project-name" name="project-name" style="padding: 6px; ">
+                                <option value="">Choose</option>
+                                @foreach($projects as $project)
+                                    <option value="{{$project->id}}">{{$project->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="z-3 d-flex gap-1 w-25">
+                            <div class="" style="margin-top: -2px">
+                                <label for="from-date">Date From:</label>
+                                <input type="date" id="from-date" name="from-date" class="form-control" style="padding: 5px; max-width:8rem;">
+                            </div>
+                            <div class="" style="margin-top: -2px">
+                                <label for="to-date">Date To:</label>
+                                <input type="date" id="to-date" name="to-date" class="form-control" style="padding: 5px; max-width:8rem;">
+                            </div>
+                            <button type="button" class="btn btn-success rounded-3 h-auto align-self-end" id='date-search-btn'>Search</button>
                         </div>
                     </div>
+                    @endcan
                     <table id="reports-table" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr class="text-center">
@@ -295,6 +331,8 @@
                     data: function (d) {
                         d.from_date = from_date;
                         d.to_date = to_date;
+                        d.user_id = $('#user-name').val();
+                        d.project_id = $('#project-name').val();
                     },
                     beforeSend: function(){
                         showLoading(true);

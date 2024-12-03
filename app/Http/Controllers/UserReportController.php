@@ -67,6 +67,7 @@ class UserReportController extends Controller
     }
     public function getData(Request $request)
     {
+        // dd($request->all());
         $reports = UserReport::with(['user', 'project'])->select(['id','date','user_id','project_id','task_tested','bug_reported','regression','smoke_testing','client_meeting',
                                     'daily_meeting','mobile_testing','other','description','automation']);
         if (Gate::denies('is-admin')) {   // if Not admin then below code witll run
@@ -76,6 +77,12 @@ class UserReportController extends Controller
         }else{
             if($request->from_date !== null && $request->to_date !== null)
                 $reports->whereBetween('date',[$request->from_date,$request->to_date]);
+            if($request->user_id != null){
+                $reports->where('user_id',$request->user_id);
+            }
+            if($request->project_id != null){
+                $reports->where('project_id',$request->project_id);
+            }
         }
         $reports->orderBy("created_at",'desc');
         return DataTables::of($reports)
