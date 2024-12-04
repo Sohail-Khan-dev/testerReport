@@ -72,7 +72,7 @@
                         <div class="">
                             <label for="date-filter">Date</label>                    
                             <select class="form-select w-auto rounded-3 z-3 relative" id="date-filter" style="padding: 6px;">
-                                <option value="Selected" selected disabled>Select</option>
+                                <option value="" selected disabled>Select</option>
                                 <option value="{{ $dateOptions['today'] }}">Today </option>
                                 <option value="{{ $dateOptions['yesterday'] }}">Yesterday</option>
                                 <option value="{{ $dateOptions['last3Days'] }}">Last 3 days</option>
@@ -109,6 +109,7 @@
                                 <input type="date" id="to-date" name="to-date" class="form-control" style="padding: 5px; max-width:8rem;">
                             </div>
                             <button type="button" class="btn btn-success rounded-3 h-auto align-self-end" id='date-search-btn'>Search</button>
+                            <button type="button" class="btn btn-primary rounded-3 h-auto align-self-end" id='date-reset-btn'>Reset</button>
                         </div>
                     </div>
                     @endcan
@@ -431,6 +432,15 @@
             to_date = $('#to-date').val();
             loadReportData();
         });
+        $('#date-reset-btn').click(function(){
+            $('#user-name').val('');
+            $('#project-name').val(''); 
+            $('#date-filter').val('');
+            $('#from-date').val('');
+            $('#to-date').val('');
+            from_date = to_date = '';
+            loadReportData();
+        })
         // function datesSearhesHtml(){
         //     const filterHtml = `
         //         <div class="dates row gx-3 gy-2">
