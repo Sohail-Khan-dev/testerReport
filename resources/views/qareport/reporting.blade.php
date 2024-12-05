@@ -414,6 +414,11 @@
 
         // Handle change event of the date filter
         $('#date-filter').on('change', function() {  
+            if($(this).val() == undefined || $(this).val() === '') return;
+            $('#user-name').val('');
+            $('#project-name').val(''); 
+            $('#from-date').val('');
+            $('#to-date').val('');
             const date = new Date();
             const todayDate = date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
             date.setDate(date.getDate() - 1); // Subtract 1 day
@@ -427,7 +432,7 @@
             loadReportData();
         });
         $('#date-search-btn').click( function() {
-            console.log("Clicked on search Btton");
+            $('#date-filter').val('');
             from_date = $('#from-date').val();
             to_date = $('#to-date').val();
             loadReportData();
