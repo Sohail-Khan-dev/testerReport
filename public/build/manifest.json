@@ -32,8 +32,18 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-PXJzCGi5.css",
+    "file": "assets/app-Dl1S75mk.css",
     "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/css/reporting.css": {
+    "file": "assets/reporting-DY6eAwGL.css",
+    "src": "resources/css/reporting.css",
+    "isEntry": true
+  },
+  "resources/css/style.css": {
+    "file": "assets/style-D1-XbeAN.css",
+    "src": "resources/css/style.css",
     "isEntry": true
   },
   "resources/js/app.js": {

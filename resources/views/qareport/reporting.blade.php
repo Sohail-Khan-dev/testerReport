@@ -1,56 +1,5 @@
 <x-app-layout>
-<style>
-    .column-width-height{
-        text-wrap: nowrap;
-        max-width: 200px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .column-width-height:hover{
-        text-wrap: wrap;
-        max-width: 300px;
-    }
-    #reports-table_filter{
-        margin: .5rem;
-    }
-    #reports-table_filter label{
-        margin-top: -0.5rem;
-    }
-    #reports-table_filter input{
-        border-radius: .5rem;
-    }
-    .table-container .dates input{
-        border-radius: .5rem;
-    }
-    .table-container .dates{
-        margin-bottom: -2.5rem;
-        margin-top: 0.5rem;
-    }
-    .dataTables_wrapper{
-        margin: 0px 0 16px 8px;
-    }
-    #reports-table_length{
-        margin-top: .75rem; 
-    }
-    #reports-table_length select{
-        border-radius: .75rem; 
-    }
-    #reports-table_paginate .paginate_button.current{
-        border-radius: 0.5rem;
-    }
-    #reports-table_paginate .paginate_button.current{
-        margin-top: 0.5rem;
-    }
-    input, .form-control, textarea{ 
-        border-radius: .5rem !important;
-        margin-top: .25rem;
-    }
-    .modal-footer{
-        display: flex;
-        align-items: center;
-        justify-content: space-evenly;
-    }
-</style>
+    @vite(['resources/css/reporting.css'])
     <div class="py-12">
         <div class="px-4">
             <div class="bg-white ">
