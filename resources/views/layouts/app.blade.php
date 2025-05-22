@@ -5,13 +5,25 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="QA Reporting System for tracking testing activities">
+    <meta name="author" content="Tester Report Team">
+
     <title>{{ config('app.name', 'Reporter') }}</title>
-    <link rel="stylesheet" href= "{{ asset('css/bootstrap.min.css') }}">
+
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/multi-select-tag.css') }}">
-   
+
+    <!-- App CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/style.css'])
+
+    <!-- Additional CSS -->
+    @stack('styles')
 </head>
 
 <body class="font-sans antialiased">
@@ -33,39 +45,45 @@
             <!-- Page Content -->
             <main>
                 {{ $slot }}
-               @include('modals.loading')
+                @include('modals.loading')
             </main>
         </div>
     </div>
+
+    <!-- Core JS -->
     <script src="{{ asset('js/jQuery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrip5.3.3.min.js') }}"></script>
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+
+    <!-- Third-party JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/js/multi-select-tag.js"></script>
-    <script> 
-        function showLoading(isDataTable=false){
-            // console.log("Show Loading ");
-            
-            // $("#loadingModal").modal({
-                // backdrop: 'static',  // Prevent closing when clicking outside
-                // keyboard: false      // Disable closing with the "Esc" key
-            // }).modal('show');
-            if(isDataTable){
+
+    <!-- Utility JS -->
+    <script src="{{ asset('js/utils.js') }}"></script>
+
+    <!-- Loading functionality -->
+    <script>
+        function showLoading(isDataTable = false) {
+            $('#loadingModal').modal('show');
+
+            if (isDataTable) {
                 $("#loadingSvg").addClass('d-none');
                 $(".loader").removeClass('d-none');
-            }
-            else{
+            } else {
                 $("#loadingSvg").removeClass('d-none');
                 $(".loader").addClass('d-none');
             }
         }
-        function hideLoading(){
-            // console.log("hide Loading ");
-            
+
+        function hideLoading() {
             $('#loadingModal').modal('hide');
         }
     </script>
+
+    <!-- Additional JS -->
+    @stack('scripts')
 </body>
 
 </html>

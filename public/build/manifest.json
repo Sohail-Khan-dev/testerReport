@@ -32,17 +32,17 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-Dl1S75mk.css",
+    "file": "assets/app-B8xx_0Co.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/css/reporting.css": {
-    "file": "assets/reporting-DY6eAwGL.css",
+    "file": "assets/reporting-c30v9r6f.css",
     "src": "resources/css/reporting.css",
     "isEntry": true
   },
   "resources/css/style.css": {
-    "file": "assets/style-D1-XbeAN.css",
+    "file": "assets/style-DgXMIAZ6.css",
     "src": "resources/css/style.css",
     "isEntry": true
   },
@@ -50,6 +50,18 @@
     "file": "assets/app-Df8Us3UK.js",
     "name": "app",
     "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/reporting.js": {
+    "file": "assets/reporting-gguxwZ70.js",
+    "name": "reporting",
+    "src": "resources/js/reporting.js",
+    "isEntry": true
+  },
+  "resources/js/utils.js": {
+    "file": "assets/utils-l0sNRNKZ.js",
+    "name": "utils",
+    "src": "resources/js/utils.js",
     "isEntry": true
   }
 }
