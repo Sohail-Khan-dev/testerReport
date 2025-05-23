@@ -1,48 +1,79 @@
 @php use Illuminate\Support\Facades\Gate; @endphp
-<aside class="navbar navbar-vertical navbar-expand-sm navbar-dark">
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <h1 class="navbar-brand navbar-brand-autodark">
-            <div class="shrink-0 flex items-center">
-                @if(auth()->user()->role == 'admin')
-                    <a href="{{ route('dashboard') }}">
-                        @else
-                            <a href="{{ route('reporting') }}">
-                                @endif
-                                <x-application-logo class="block h-9 w-auto fill-current text-gray-800"/>
-                            </a>
-            </div>
-        </h1>
-        <div class="navbar-collapse" id="sidebar-menu">
-            <ul class="navbar-nav pt-lg-3">
-                @can('is-admin')
-                    <li class="nav-item">
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
-                    </li>
-                @endcan
-                <li class="nav-item">
-                    <x-nav-link :href="route('reporting')" :active="request()->routeIs('reporting')">
-                        {{ __('Reporting') }}
-                    </x-nav-link>
-                </li>
-                {{--            @dd(auth()->user()->role);--}}
-                @can('is-admin')
-                    <li class="nav-item">
-                        <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
-                            {{ __('Users') }}
-                        </x-nav-link>
-                    </li>
-                    <li class="nav-item">
-                        <x-nav-link :href="route('projects')" :active="request()->routeIs('projects')">
-                            {{ __('Projects') }}
-                        </x-nav-link>
-                    </li>
-                @endcan
-            </ul>
+<aside class="sidebar">
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            @if(auth()->user()->role == 'admin')
+                <a href="{{ route('dashboard') }}" class="sidebar-logo">
+            @else
+                <a href="{{ route('reporting') }}" class="sidebar-logo">
+            @endif
+                <img src="{{ asset('images/logo.svg') }}" alt="Logo">
+                <span class="sidebar-logo-text">{{ config('app.name', 'Reporter') }}</span>
+            </a>
         </div>
+
+        <button class="sidebar-toggle" type="button">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar-nav">
+        @can('is-admin')
+            <div class="sidebar-nav-item">
+                <a href="{{ route('dashboard') }}" class="sidebar-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <div class="sidebar-nav-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <span class="sidebar-nav-text">{{ __('Dashboard') }}</span>
+                </a>
+            </div>
+        @endcan
+
+        <div class="sidebar-nav-item">
+            <a href="{{ route('reporting') }}" class="sidebar-nav-link {{ request()->routeIs('reporting') ? 'active' : '' }}">
+                <div class="sidebar-nav-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <span class="sidebar-nav-text">{{ __('Reporting') }}</span>
+            </a>
+        </div>
+
+        @can('is-admin')
+            <div class="sidebar-nav-item">
+                <a href="{{ route('users') }}" class="sidebar-nav-link {{ request()->routeIs('users') ? 'active' : '' }}">
+                    <div class="sidebar-nav-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="sidebar-nav-text">{{ __('Users') }}</span>
+                </a>
+            </div>
+
+            <div class="sidebar-nav-item">
+                <a href="{{ route('projects') }}" class="sidebar-nav-link {{ request()->routeIs('projects') ? 'active' : '' }}">
+                    <div class="sidebar-nav-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <span class="sidebar-nav-text">{{ __('Projects') }}</span>
+                </a>
+            </div>
+        @endcan
+    </div>
+
+    <!-- Sidebar User -->
+    <div class="sidebar-user">
+        <div class="sidebar-user-avatar">
+            {{ substr(Auth::user()->name, 0, 1) }}
+        </div>
+        <div class="sidebar-user-info">
+            <h6 class="sidebar-user-name">{{ Auth::user()->name }}</h6>
+            <p class="sidebar-user-role">{{ ucfirst(Auth::user()->role ?? 'User') }}</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        <p>&copy; {{ date('Y') }} {{ config('app.name') }}</p>
     </div>
 </aside>

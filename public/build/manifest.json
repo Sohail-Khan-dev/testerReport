@@ -32,18 +32,43 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-B8xx_0Co.css",
+    "file": "assets/app-DXV1m660.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
+  "resources/css/datatables-custom.css": {
+    "file": "assets/datatables-custom-B5lQu4bH.css",
+    "src": "resources/css/datatables-custom.css",
+    "isEntry": true
+  },
+  "resources/css/footer.css": {
+    "file": "assets/footer-DwqEKPjU.css",
+    "src": "resources/css/footer.css",
+    "isEntry": true
+  },
+  "resources/css/navbar.css": {
+    "file": "assets/navbar-CDPWcsV3.css",
+    "src": "resources/css/navbar.css",
+    "isEntry": true
+  },
   "resources/css/reporting.css": {
-    "file": "assets/reporting-c30v9r6f.css",
+    "file": "assets/reporting-C-e4PvaO.css",
     "src": "resources/css/reporting.css",
+    "isEntry": true
+  },
+  "resources/css/sidebar.css": {
+    "file": "assets/sidebar-CuX_QdFD.css",
+    "src": "resources/css/sidebar.css",
     "isEntry": true
   },
   "resources/css/style.css": {
     "file": "assets/style-DgXMIAZ6.css",
     "src": "resources/css/style.css",
+    "isEntry": true
+  },
+  "resources/css/theme.css": {
+    "file": "assets/theme-Cl3H7tuw.css",
+    "src": "resources/css/theme.css",
     "isEntry": true
   },
   "resources/js/app.js": {
@@ -56,6 +81,12 @@
     "file": "assets/reporting-gguxwZ70.js",
     "name": "reporting",
     "src": "resources/js/reporting.js",
+    "isEntry": true
+  },
+  "resources/js/theme.js": {
+    "file": "assets/theme-BY1QsR-m.js",
+    "name": "theme",
+    "src": "resources/js/theme.js",
     "isEntry": true
   },
   "resources/js/utils.js": {

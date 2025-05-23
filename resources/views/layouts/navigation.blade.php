@@ -1,104 +1,152 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <!-- <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
-                </div> -->
-
-                <!-- Navigation Links -->
-                <!-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div> -->
-                <!-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('reporting')" :active="request()->routeIs('reporting')">
-                        {{ __('Reporting') }}
-                    </x-nav-link>
-                </div> -->
-            </div>
-
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <!-- <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link> -->
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+<nav class="navbar navbar-expand-lg">
+    <!-- Navbar Left -->
+    <div class="navbar-left">
+        <!-- Mobile Sidebar Toggle -->
+        <button class="navbar-toggle" type="button">
+            <i class="fas fa-bars"></i>
+        </button>
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
+    <!-- Page Title -->
+    <div class="d-flex justify-content-center flex-grow-1">
+        <p class="h1 text-center navbar-title m-2">{{ $header ?? config('app.name') }}</p>
+    </div>
 
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+    <!-- Navbar Right -->
+    <div class="navbar-right">
+        <!-- Search -->
+        {{-- <div class="navbar-search">
+            <i class="fas fa-search navbar-search-icon"></i>
+            <input type="text" class="navbar-search-input" placeholder="Search...">
+        </div> --}}
+
+        <!-- Actions -->
+        <div class="navbar-actions">
+            <!-- Notifications -->
+            <div class="navbar-dropdown">
+                <button class="navbar-action" data-toggle="dropdown">
+                    <i class="fas fa-bell"></i>
+                    <span class="navbar-action-badge">3</span>
+                </button>
+
+                <div class="navbar-dropdown-menu">
+                    <div class="navbar-dropdown-header">
+                        <h6 class="navbar-dropdown-title">Notifications (comming soon) </h6>
+                    </div>
+
+                    <a href="#" class="navbar-dropdown-item">
+                        <div class="navbar-dropdown-icon">
+                            <i class="fas fa-check-circle text-success"></i>
+                        </div>
+                        <div class="navbar-dropdown-text">New report submitted</div>
+                    </a>
+
+                    <a href="#" class="navbar-dropdown-item">
+                        <div class="navbar-dropdown-icon">
+                            <i class="fas fa-exclamation-circle text-warning"></i>
+                        </div>
+                        <div class="navbar-dropdown-text">Project updated</div>
+                    </a>
+
+                    <a href="#" class="navbar-dropdown-item">
+                        <div class="navbar-dropdown-icon">
+                            <i class="fas fa-info-circle text-info"></i>
+                        </div>
+                        <div class="navbar-dropdown-text">System update completed</div>
+                    </a>
+
+                    <div class="navbar-dropdown-footer">
+                        <a href="#" class="navbar-dropdown-item">
+                            <div class="navbar-dropdown-text text-center">View all notifications</div>
+                        </a>
+                    </div>
+                </div>
             </div>
 
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
+            <!-- Settings -->
+            {{-- <div class="navbar-dropdown">
+                <button class="navbar-action" data-toggle="dropdown">
+                    <i class="fas fa-cog"></i>
+                </button>
 
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
+                <div class="navbar-dropdown-menu">
+                    <div class="navbar-dropdown-header">
+                        <h6 class="navbar-dropdown-title">Settings</h6>
+                    </div>
 
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
+                    <a href="{{ route('profile.edit') }}" class="navbar-dropdown-item">
+                        <div class="navbar-dropdown-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="navbar-dropdown-text">Profile</div>
+                    </a>
+
+                    <a href="#" class="navbar-dropdown-item">
+                        <div class="navbar-dropdown-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <div class="navbar-dropdown-text">Appearance</div>
+                    </a>
+
+                    <div class="navbar-dropdown-footer">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <a href="{{ route('logout') }}" class="navbar-dropdown-item"
+                                onclick="event.preventDefault(); this.closest('form').submit();">
+                                <div class="navbar-dropdown-icon">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </div>
+                                <div class="navbar-dropdown-text">{{ __('Log Out') }}</div>
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </div> --}}
+        </div>
+
+        <!-- User -->
+        <div class="navbar-dropdown">
+            <div class="navbar-user" data-toggle="dropdown">
+                <div class="navbar-user-avatar">
+                    {{ substr(Auth::user()->name, 0, 1) }}
+                </div>
+                <div class="navbar-user-info">
+                    <h6 class="navbar-user-name">{{ Auth::user()->name }}</h6>
+                    <p class="navbar-user-role">{{ ucfirst(Auth::user()->role ?? 'User') }}</p>
+                </div>
+            </div>
+
+            <div class="navbar-dropdown-menu">
+                <div class="navbar-dropdown-header">
+                    <h6 class="navbar-dropdown-title">User Menu</h6>
+                </div>
+
+                <a href="{{ route('profile.edit') }}" class="navbar-dropdown-item">
+                    <div class="navbar-dropdown-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="navbar-dropdown-text">Profile</div>
+                </a>
+
+                <a href="#" class="navbar-dropdown-item">
+                    <div class="navbar-dropdown-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="navbar-dropdown-text">My Reports</div>
+                </a>
+
+                <div class="navbar-dropdown-footer">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <a href="{{ route('logout') }}" class="navbar-dropdown-item"
+                            onclick="event.preventDefault(); this.closest('form').submit();">
+                            <div class="navbar-dropdown-icon">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </div>
+                            <div class="navbar-dropdown-text">{{ __('Log Out') }}</div>
+                        </a>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

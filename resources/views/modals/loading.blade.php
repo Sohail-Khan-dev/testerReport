@@ -14,7 +14,7 @@
 
     .loading-circle {
         animation: circle-fade 1s infinite;
-        filter: drop-shadow(0 0 2px rgba(52, 152, 219, 0.5));
+        filter: drop-shadow(0 0 2px rgba(67, 97, 238, 0.5));
     }
 
     .circle-1 {
@@ -32,12 +32,12 @@
     /* Spinner animation */
     .loader {
         border: 5px solid rgba(243, 243, 243, 0.5);
-        border-top: 5px solid var(--primary-color, #3498db);
+        border-top: 5px solid var(--primary-color);
         border-radius: 50%;
         width: 70px;
         height: 70px;
         animation: spin 1s linear infinite;
-        box-shadow: 0 0 15px rgba(52, 152, 219, 0.2);
+        box-shadow: 0 0 15px rgba(67, 97, 238, 0.2);
     }
 
     @keyframes spin {
@@ -49,12 +49,12 @@
     #loadingModal .modal-content {
         background-color: rgba(255, 255, 255, 0.95);
         border: none;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-lg);
     }
 
     #loadingModal .modal-body {
-        padding: 2rem;
+        padding: var(--spacing-xl);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -62,7 +62,7 @@
     }
 
     #loadingSvg {
-        margin-top: 1.5rem;
+        margin-top: var(--spacing-lg);
         width: 100%;
         justify-content: center;
     }
@@ -76,9 +76,9 @@
                 <div class="loader mx-auto"></div>
                 <div id="loadingSvg" class="d-flex">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20" width="100" height="20">
-                        <circle cx="20" cy="10" r="5" fill="var(--primary-color, #3498db)" class="loading-circle circle-1" />
-                        <circle cx="50" cy="10" r="5" fill="var(--primary-color, #3498db)" class="loading-circle circle-2" />
-                        <circle cx="80" cy="10" r="5" fill="var(--primary-color, #3498db)" class="loading-circle circle-3" />
+                        <circle cx="20" cy="10" r="5" fill="var(--primary-color)" class="loading-circle circle-1" />
+                        <circle cx="50" cy="10" r="5" fill="var(--primary-color)" class="loading-circle circle-2" />
+                        <circle cx="80" cy="10" r="5" fill="var(--primary-color)" class="loading-circle circle-3" />
                     </svg>
                 </div>
             </div>

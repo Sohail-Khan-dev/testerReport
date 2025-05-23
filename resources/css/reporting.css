@@ -59,7 +59,8 @@
 
 /* DataTables wrapper styling */
 .dataTables_wrapper {
-    margin: 0px 0 16px 8px;
+    margin: 0;
+    width: 100%;
 }
 
 /* Length control styling */

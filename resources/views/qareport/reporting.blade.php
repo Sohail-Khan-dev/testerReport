@@ -1,24 +1,25 @@
 <x-app-layout>
     @vite(['resources/css/reporting.css'])
-    <div class="py-12">
-        <div class="px-4">
-            <div class="bg-white ">
-                <div class="outer d-flex justify-between align-items-center px-4 border-bottom">
-                    <div class="p-6 text-gray-900 d-flex justify-center w-75 font-semibold text-2xl">
-                        @can('is-admin')
-                            {{ __("All QA's Reports") }}
-                        @endcan
-                        @can('is-user')
-                            {{ __('Today Report') }}
-                        @endcan
-                    </div>
-                    <div>
-                        <button type="button" class="btn btn-primary addTask" data-bs-toggle="modal"
-                            data-bs-target="#report-input-modal">
-                            Add Task
-                        </button>
-                    </div>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1 text-center">
+                <div class=" h2 card-title">
+                    @can('is-admin')
+                        {{ __("All QA's Reports") }}
+                    @endcan
+                    @can('is-user')
+                        {{ __('Today Report') }}
+                    @endcan
                 </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary addTask" data-bs-toggle="modal"
+                    data-bs-target="#report-input-modal">
+                    <i class="fas fa-plus me-2"></i> Add Task
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-0">
                 <div class="table-responsive">
                     <div class="d-flex flex-column flex-md-row justify-content-between mb-3">
                         <div class="order-2 order-md-1">
@@ -80,8 +81,9 @@
                             @endcan
                         </div>
                     </div>
-                     <p class="h1 text-center" style="margin-bottom: -3rem !important;">Team Report</p>
-                    <table id="reports-table" class="table table-striped table-bordered" style="width:100%">
+                    <div class="px-4 py-3">
+                        <h2 class="text-center h3 " style="margin-bottom: -2rem">Latest Reports Record</h2>
+                        <table id="reports-table" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr class="text-center">
                                 <th> Date</th>
@@ -122,6 +124,7 @@
                             </tr>
                         </tfoot>
                     </table>
+                    </div>
                 </div>
             </div>
         </div>

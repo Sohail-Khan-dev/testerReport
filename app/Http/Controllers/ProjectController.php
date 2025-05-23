@@ -2,34 +2,123 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
-use Illuminate\Http\Request;
-use Yajra\DataTables\Exceptions\Exception;
+use App\Http\Requests\ProjectRequest;
+use App\Services\ProjectService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
-    public function index(): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
-    {
-        return view('qareport.project');
-    }
-    public function store(Request $request): \Illuminate\Http\JsonResponse
-    {
-        $validatedData = $request->validate([
-           'name' => ['required', 'string'],
-           'description' => ['nullable','string']
-        ]);
-//        dd('here it is ', $validatedData);
+    /**
+     * @var ProjectService
+     */
+    protected $projectService;
 
-        $project = Project::create($validatedData);
-        return response()->json(['success'=>true , 'record'=>$project]);
+    /**
+     * ProjectController constructor.
+     *
+     * @param ProjectService $projectService
+     */
+    public function __construct(ProjectService $projectService)
+    {
+        $this->projectService = $projectService;
     }
 
     /**
-     * @throws Exception
+     * Display the project view.
+     *
+     * @return View
      */
-    public function get(): \Illuminate\Http\JsonResponse|\Yajra\DataTables\DataTableAbstract
+    public function index(): View
     {
-        $project = Project::all();
-        return datatables($project)->make(true);
+        return view('qareport.project');
+    }
+
+    /**
+     * Store a newly created project in storage.
+     *
+     * @param ProjectRequest $request
+     * @return JsonResponse
+     */
+    public function store(ProjectRequest $request): JsonResponse
+    {
+        try {
+            $project = $this->projectService->storeProject($request->validated());
+
+            return response()->json([
+                'success' => true,
+                'record' => $project,
+                'message' => 'Project created successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating project: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get all projects for DataTables.
+     *
+     * @return mixed
+     */
+    public function get()
+    {
+        return $this->projectService->getProjectsForDataTable();
+    }
+
+    /**
+     * Update the specified project in storage.
+     *
+     * @param ProjectRequest $request
+     * @return JsonResponse
+     */
+    public function update(ProjectRequest $request): JsonResponse
+    {
+        try {
+            $project = $this->projectService->updateProject($request->validated());
+
+            return response()->json([
+                'success' => true,
+                'record' => $project,
+                'message' => 'Project updated successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating project: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Remove the specified project from storage.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        try {
+            $result = $this->projectService->deleteProject($id);
+
+            if ($result) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Project deleted successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to delete project'
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting project: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
