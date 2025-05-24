@@ -32,7 +32,7 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-DXV1m660.css",
+    "file": "assets/app-CKjTf2cZ.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -78,7 +78,7 @@
     "isEntry": true
   },
   "resources/js/reporting.js": {
-    "file": "assets/reporting-gguxwZ70.js",
+    "file": "assets/reporting-DhShGCrS.js",
     "name": "reporting",
     "src": "resources/js/reporting.js",
     "isEntry": true
