@@ -121,7 +121,7 @@
                     <h6 class="navbar-dropdown-title">User Menu</h6>
                 </div>
 
-                <a href="{{ route('profile.edit') }}" class="navbar-dropdown-item">
+                {{-- <a href="{{ route('profile.edit') }}" class="navbar-dropdown-item">
                     <div class="navbar-dropdown-icon">
                         <i class="fas fa-user"></i>
                     </div>
@@ -133,7 +133,7 @@
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <div class="navbar-dropdown-text">My Reports</div>
-                </a>
+                </a> --}}
 
                 <div class="navbar-dropdown-footer">
                     <form method="POST" action="{{ route('logout') }}">

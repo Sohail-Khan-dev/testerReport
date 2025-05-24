@@ -13,6 +13,13 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+
+        // Send notification at 5:20 PM Pakistan time (which is 8:20 AM EDT)
+        // Skip weekends (Saturday and Sunday)
+        $schedule->command('app:send-daily-notifications')
+                ->dailyAt('08:20') // Server time is EDT, 9 hours behind Pakistan
+                ->weekdays() // This automatically excludes Saturday and Sunday
+                ->appendOutputTo(storage_path('logs/daily-notifications.log'));
     }
 
     /**

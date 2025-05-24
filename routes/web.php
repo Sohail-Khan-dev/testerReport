@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserReportController;
+use App\Http\Controllers\EmailPreferenceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +57,7 @@ Route::middleware('auth')->group(function () {
 
 });
 Route::get('test',function(){
-    return view('testing.test');
+    return view('emails.daily-notification', ['user' => auth()->user()]);
 });
 
 require __DIR__.'/auth.php';
@@ -69,3 +70,7 @@ Route::get('/layout',function(){
 Route::get('/modal',function(){
     return view('tabler.modals');
 });
+
+// Email preference routes
+Route::get('/unsubscribe/{user}', [EmailPreferenceController::class, 'unsubscribe'])->name('email.unsubscribe');
+Route::post('/email-preferences/{user}', [EmailPreferenceController::class, 'update'])->name('email.preferences.update');
