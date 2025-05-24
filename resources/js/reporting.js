@@ -1,6 +1,31 @@
 /**
  * Reporting Module - Handles all reporting functionality
  */
+
+/**
+ * Helper function to truncate text with ellipsis and tooltip
+ * @param {string} text - The text to truncate
+ * @param {number} maxLength - Maximum length before truncation
+ * @returns {string} - Truncated text with tooltip or original text
+ */
+function truncateText(text, maxLength) {
+    if (!text) return text;
+
+    // Convert to string if not already
+    text = String(text);
+
+    if (text.length > maxLength) {
+        // Escape HTML characters in the title attribute
+        const escapedText = text.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return '<span title="' + escapedText + '" class="truncated-text" data-full-text="' + escapedText + '">' +
+               text.substring(0, maxLength) + '...</span>';
+    }
+
+    // Even for non-truncated text, add tooltip for consistency
+    const escapedText = text.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return '<span title="' + escapedText + '" class="full-text" data-full-text="' + escapedText + '">' + text + '</span>';
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     // Initialize variables
     let from_date = '';
@@ -315,6 +340,26 @@ document.addEventListener('DOMContentLoaded', function () {
                             'text-overflow': 'ellipsis'
                         });
                     }
+                },
+                {
+                    // Target Project column (3rd column, index 2)
+                    targets: [2],
+                    render: function(data, type, row) {
+                        if (type === 'display' || type === 'type') {
+                            return truncateText(data, 20);
+                        }
+                        return data;
+                    }
+                },
+                {
+                    // Target Description column (13th column, index 12)
+                    targets: [12],
+                    render: function(data, type, row) {
+                        if (type === 'display' || type === 'type') {
+                            return truncateText(data, 20);
+                        }
+                        return data;
+                    }
                 }
             ],
             drawCallback: function () {
@@ -482,4 +527,169 @@ document.addEventListener('DOMContentLoaded', function () {
             $('.report-form-submit').removeClass('disabled');
         });
     }
+
+    /**
+     * Initialize enhanced tooltips for Project and Description columns
+     */
+    function initEnhancedTooltips() {
+        // Add event listeners for better tooltip positioning and visual feedback
+        $(document).on('mouseenter', '#reports-table td:nth-child(3) span[title], #reports-table td:nth-child(13) span[title]', function(e) {
+            const $this = $(this);
+            const fullText = $this.attr('title') || $this.data('full-text');
+
+            if (fullText && fullText.length > 20) {
+                // Add visual indicator that there's more content
+                $this.addClass('has-tooltip');
+
+                // Add a subtle animation to indicate interactivity
+                $this.css({
+                    'transform': 'scale(1.02)',
+                    'transition': 'transform 0.2s ease'
+                });
+            }
+        });
+
+        $(document).on('mouseleave', '#reports-table td:nth-child(3) span[title], #reports-table td:nth-child(13) span[title]', function() {
+            $(this).removeClass('has-tooltip').css({
+                'transform': 'scale(1)',
+                'transition': 'transform 0.2s ease'
+            });
+        });
+
+        // Add double-click functionality to show content in a modal for very long text
+        $(document).on('dblclick', '#reports-table td:nth-child(3) .truncated-text, #reports-table td:nth-child(13) .truncated-text', function(e) {
+            e.preventDefault();
+            const fullText = $(this).attr('title') || $(this).data('full-text');
+            const columnName = $(this).closest('td').is(':nth-child(3)') ? 'Project' : 'Description';
+
+            if (fullText && fullText.length > 50) {
+                showContentModal(columnName, fullText);
+            }
+        });
+    }
+
+    /**
+     * Show content in a modal for very long text
+     */
+    function showContentModal(columnName, content) {
+        // Create modal HTML with better styling
+        const modalHtml = `
+            <div class="modal fade" id="contentModal" tabindex="-1" role="dialog" aria-labelledby="contentModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="contentModalLabel">
+                                <i class="fas fa-info-circle mr-2"></i>${columnName} Content
+                            </h5>
+                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="content-display p-3" style="background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6;">
+                                ${content}
+                            </div>
+                            <div class="mt-3 text-muted small">
+                                <i class="fas fa-lightbulb mr-1"></i>
+                                Tip: You can copy this text by selecting it.
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                <i class="fas fa-times mr-1"></i>Close
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="copyToClipboard('${content.replace(/'/g, "\\'")}')">
+                                <i class="fas fa-copy mr-1"></i>Copy Text
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Remove existing modal if any
+        $('#contentModal').remove();
+
+        // Add modal to body and show
+        $('body').append(modalHtml);
+        $('#contentModal').modal('show');
+
+        // Remove modal from DOM when hidden
+        $('#contentModal').on('hidden.bs.modal', function() {
+            $(this).remove();
+        });
+    }
+
+    /**
+     * Copy text to clipboard
+     */
+    function copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            // Use the modern clipboard API
+            navigator.clipboard.writeText(text).then(function() {
+                showCopySuccess();
+            }).catch(function(err) {
+                console.error('Failed to copy text: ', err);
+                fallbackCopyTextToClipboard(text);
+            });
+        } else {
+            // Fallback for older browsers
+            fallbackCopyTextToClipboard(text);
+        }
+    }
+
+    /**
+     * Fallback copy method for older browsers
+     */
+    function fallbackCopyTextToClipboard(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
+
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                showCopySuccess();
+            } else {
+                console.error('Fallback: Copying text command was unsuccessful');
+            }
+        } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+        }
+
+        document.body.removeChild(textArea);
+    }
+
+    /**
+     * Show copy success message
+     */
+    function showCopySuccess() {
+        // Create a temporary success message
+        const successMsg = $('<div class="alert alert-success alert-dismissible fade show position-fixed" style="top: 20px; right: 20px; z-index: 9999; min-width: 250px;">' +
+            '<i class="fas fa-check-circle mr-2"></i>Text copied to clipboard!' +
+            '<button type="button" class="close" data-dismiss="alert">' +
+            '<span>&times;</span>' +
+            '</button>' +
+            '</div>');
+
+        $('body').append(successMsg);
+
+        // Auto-remove after 3 seconds
+        setTimeout(function() {
+            successMsg.fadeOut(function() {
+                $(this).remove();
+            });
+        }, 3000);
+    }
+
+    // Initialize enhanced tooltips when document is ready
+    $(document).ready(function() {
+        initEnhancedTooltips();
+    });
 });
