@@ -21,7 +21,7 @@
         </div>
         <div class="card-body p-0">
                 <div class="table-responsive">
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-3">
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-3 mx-4">
                         <div class="order-2 order-md-1">
                             @can('is-admin')
                                 <div class="dates d-flex gap-2">
