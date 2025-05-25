@@ -105,7 +105,8 @@
             <p>Please take a moment to log your daily activities and progress. Keeping your reports up-to-date helps the team track project status and ensures everyone stays informed.</p>
 
             <p style="text-align: center;">
-                <a href="/reporting" class="btn text-white">Update My Reports</a>
+                <a href="{{ $reportingUrl ?? route('reporting') }}" class="btn text-white">Update My Reports</a>
+                {{-- <a href="http://localhost:8000/reporting" class="btn text-white">Update My Reports</a> --}}
             </p>
 
             <p>Thank you for your contribution to the team's success!</p>
