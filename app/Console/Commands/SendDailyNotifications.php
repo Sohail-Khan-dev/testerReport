@@ -44,8 +44,8 @@ class SendDailyNotifications extends Command
             $query->where('email_notifications', true)
                   ->orWhereNull('email_notifications');
         })->get();
-         Mail::to("sohail8338@gmail.com")->send(new DailyNotification($users[0]));
-        dd($users);
+        //  Mail::to("sohail8338@gmail.com")->send(new DailyNotification($users[0]));
+        // dd($users);
         $count = 0;
 
         $this->info("Starting to send daily notification emails...");
