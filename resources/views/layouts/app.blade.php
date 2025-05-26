@@ -97,15 +97,15 @@
     <!-- Loading functionality -->
     <script>
         function showLoading(isDataTable = false) {
-            $('#loadingModal').modal('show');
+            // $('#loadingModal').modal('show');
 
-            if (isDataTable) {
-                $("#loadingSvg").addClass('d-none');
-                $(".loader").removeClass('d-none');
-            } else {
-                $("#loadingSvg").removeClass('d-none');
-                $(".loader").addClass('d-none');
-            }
+            // if (isDataTable) {
+            //     $("#loadingSvg").addClass('d-none');
+            //     $(".loader").removeClass('d-none');
+            // } else {
+            //     $("#loadingSvg").removeClass('d-none');
+            //     $(".loader").addClass('d-none');
+            // }
         }
 
         function hideLoading() {
