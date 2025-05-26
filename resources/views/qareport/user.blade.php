@@ -41,7 +41,7 @@
     @include('modals.add-user')
 </x-app-layout>
 <script>
-    $(document).ready(function() {
+    // $(document).ready(function() {
         $(document).on('click', '.deleteUser', function (e) {
             e.preventDefault();
             let userId = $(this).data('id');
@@ -70,7 +70,7 @@
                             _token: '{{ csrf_token() }}'
                         },
                         beforeSend :function(){
-                            // showLoading();
+                            showLoading();
                         },
                         success: function (response) {
                             hideLoading();
@@ -137,17 +137,49 @@
                     processData: false, // Prevent jQuery from automatically transforming the data into a query string
                     contentType: false,
                     beforeSend:function(){
-                        // showLoading();
+                        showLoading();
                     },
                     success : function (response){
                         hideLoading();
                         $('#close-modal').click();
                         $('#add-user-form')[0].reset();
                         $('#user-table').DataTable().ajax.reload();
+                        Swal.fire(
+                            'Success!', 'User has been added successfully!', 'success'
+                        );
                     },
                     error: function(xhr, status, error) {
                         hideLoading();
-                        console.error('Error Response is:', error);
+                        
+                        // Parse the response to get validation errors
+                        if (xhr.status === 422) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                let errorMessage = 'Validation Error:';
+                                
+                                if (response.errors) {
+                                    // Loop through all error messages
+                                    Object.keys(response.errors).forEach(field => {
+                                        errorMessage += `\n• ${response.errors[field].join('\n• ')}`;
+                                    });
+                                } else if (response.message) {
+                                    errorMessage = response.message;
+                                }
+                                
+                                // Show error with SweetAlert instead of basic alert
+                                Swal.fire(
+                                    'Error!', 
+                                    errorMessage, 
+                                    'error'
+                                );
+                            } catch (e) {
+                                Swal.fire('Error!', 'An error occurred while processing your request.', 'error');
+                            }
+                        } else {
+                            Swal.fire('Error!', 'An error occurred while processing your request.', 'error');
+                        }
+                        
+                        console.error('Error Response:', xhr.responseText);
                     }
                 });
             }else {
@@ -179,7 +211,7 @@
               method : 'GET',
               data : {id : id},
               beforeSend : function(){
-                // showLoading();
+                showLoading();
               },
               success : function (response){ 
                 hideLoading();
@@ -214,7 +246,7 @@
         });
         loadUsers();
         function loadUsers(){
-            // showLoading(true);
+            console.log("Called load users");
           if($.fn.dataTable.isDataTable('#user-table')){
               $('#user-table').DataTable().clear().destroy();
           }
@@ -224,7 +256,12 @@
                 dom: '<"top"f> rt<"bottom"ip><"clear">',
                 ajax: {
                     url:'{{ route("users.data") }}',
+                    beforeSend:function(){
+                        console.log("Called before send");
+                        showLoading(true);
+                    },
                     complete : function(){
+                        console.log("Called complete");
                         hideLoading();
                     }
                 },
@@ -236,7 +273,7 @@
                 ]
             });
         }
-    });
+    // });
 
     new MultiSelectTag('projects', {
         rounded: true,    // default true
@@ -252,3 +289,4 @@
        }
     });
 </script>
+

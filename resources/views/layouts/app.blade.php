@@ -93,28 +93,35 @@
 
     <!-- Theme JS -->
     @vite(['resources/js/theme.js', 'resources/js/utils.js'])
-
+  <!-- Additional JS -->
+    @stack('scripts')
     <!-- Loading functionality -->
     <script>
+        let loadingModal  = null;
         function showLoading(isDataTable = false) {
-            // $('#loadingModal').modal('show');
+            // Bootstrap 5 uses different modal syntax
+            loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+            loadingModal.show();
 
-            // if (isDataTable) {
-            //     $("#loadingSvg").addClass('d-none');
-            //     $(".loader").removeClass('d-none');
-            // } else {
-            //     $("#loadingSvg").removeClass('d-none');
-            //     $(".loader").addClass('d-none');
-            // }
+            if (isDataTable) {
+                $("#loadingSvg").addClass('d-none');
+                $(".loader").removeClass('d-none');
+            } else {
+                $("#loadingSvg").removeClass('d-none');
+                $(".loader").addClass('d-none');
+            }
         }
 
         function hideLoading() {
-            $('#loadingModal').modal('hide');
+            // const loadingModal = bootstrap.Modal.getInstance(document.getElementById('loadingModal'));
+           
+            if (loadingModal) {
+                loadingModal.hide();
+            }
         }
     </script>
-
-    <!-- Additional JS -->
-    @stack('scripts')
+  
 </body>
 
 </html>
+

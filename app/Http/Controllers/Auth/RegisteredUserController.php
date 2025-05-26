@@ -53,7 +53,7 @@ class RegisteredUserController extends Controller
         return redirect(RouteServiceProvider::HOME);
     }
 
-    public function storeNew(Request $request): JsonResponse
+    public function storeNew(Request $request)
     {
 
         if($request['role'] == null){
