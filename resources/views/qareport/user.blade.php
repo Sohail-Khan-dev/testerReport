@@ -70,7 +70,7 @@
                             _token: '{{ csrf_token() }}'
                         },
                         beforeSend :function(){
-                            showLoading();
+                            // showLoading();
                         },
                         success: function (response) {
                             hideLoading();
@@ -137,7 +137,7 @@
                     processData: false, // Prevent jQuery from automatically transforming the data into a query string
                     contentType: false,
                     beforeSend:function(){
-                        showLoading();
+                        // showLoading();
                     },
                     success : function (response){
                         hideLoading();
@@ -179,7 +179,7 @@
               method : 'GET',
               data : {id : id},
               beforeSend : function(){
-                showLoading();
+                // showLoading();
               },
               success : function (response){ 
                 hideLoading();
@@ -214,7 +214,7 @@
         });
         loadUsers();
         function loadUsers(){
-            showLoading(true);
+            // showLoading(true);
           if($.fn.dataTable.isDataTable('#user-table')){
               $('#user-table').DataTable().clear().destroy();
           }
