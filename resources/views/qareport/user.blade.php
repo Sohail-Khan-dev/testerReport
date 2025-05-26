@@ -214,6 +214,7 @@
         });
         loadUsers();
         function loadUsers(){
+            showLoading(true);
           if($.fn.dataTable.isDataTable('#user-table')){
               $('#user-table').DataTable().clear().destroy();
           }
@@ -223,9 +224,6 @@
                 dom: '<"top"f> rt<"bottom"ip><"clear">',
                 ajax: {
                     url:'{{ route("users.data") }}',
-                    beforeSend:function(){
-                        showLoading(true);
-                    },
                     complete : function(){
                         hideLoading();
                     }
