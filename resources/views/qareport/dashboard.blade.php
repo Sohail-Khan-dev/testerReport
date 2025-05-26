@@ -63,14 +63,24 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
   <!-- Clock Display -->
-  <div id="clock" style="position: fixed; bottom: 20px; right: 20px; background-color: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 1.1em; font-weight: bold;"></div>
+  <div id="clock" style="position: fixed; bottom: 20px; right: 20px; background-color: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 1.1em; font-weight: bold;">
+    <div>Server: <span id="server-time"></span></div>
+    <div>Local: <span id="local-time"></span></div>
+  </div>
 
   <script>
+    // Initial server time from PHP
+    let serverTime = new Date('{{ now() }}');
+
     // Clock update function
     function updateClock() {
-      const now = new Date();
-      const timeString = now.toLocaleTimeString();
-      document.getElementById('clock').textContent = timeString;
+      // Update server time
+      serverTime = new Date(serverTime.getTime() + 1000); // Add 1 second
+      document.getElementById('server-time').textContent = serverTime.toLocaleTimeString();
+
+      // Update local time
+      const localTime = new Date();
+      document.getElementById('local-time').textContent = localTime.toLocaleTimeString();
     }
 
     // Update clock immediately and then every second
