@@ -175,7 +175,7 @@ class UserReportController extends Controller
                     'daily_meeting' => $projectReports->sum('daily_meeting'),
                     'mobile_testing' => $projectReports->sum('mobile_testing'),
                     'automation_testing' => $projectReports->sum('automation'),
-                    'other' => $projectReports->sum('other')
+                    // 'other' => $projectReports->sum('other')
                 ];
             });
         });
