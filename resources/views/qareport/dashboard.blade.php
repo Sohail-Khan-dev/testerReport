@@ -116,7 +116,7 @@
                 labels: [
                   'Tasks Tested', 'Bugs Reported', 'Regression Testing', 
                   'Smoke Testing', 'Client Meeting', 'Daily Meeting',
-                  'Mobile Testing', 'Automation Testing', 'Other'
+                  'Mobile Testing', 'Automation Testing'
                 ],
                 datasets: [{
                   data: data,
