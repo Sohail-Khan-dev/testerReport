@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Gate;
 
 Route::get('/', function () {
     if(Auth::check()){
-//        dd('here we are : ' , auth()->user()->role);
-
         if(Gate::allows('is-admin'))
             return redirect()->route('dashboard');
         if(Gate::allows('is-user')) {
@@ -24,7 +22,8 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     if(Gate::allows('is-admin'))
-        return view('qareport.dashboard');
+    // I want to call the dashbaord function in the UserReportController
+        return redirect()->route('dashboard.show');
     else if(Gate::allows('is-user'))
         return redirect()->route('reporting');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -46,6 +45,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/save',[ProjectController::class,'get'])->name('project.data');
         Route::delete('/report',[UserReportController::class,'delete'])->name('user-reports.delete');
 
+        Route::get('/show-dashboared', [UserReportController::class, 'dashboard'])->name('dashboard.show');
     });
 
     Route::post('/report',[UserReportController::class,'store'])->name('user-reports.store');

@@ -10,6 +10,7 @@ use App\Services\UserReportService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Models\UserReport;
 
 class UserReportController extends Controller
 {
@@ -139,4 +140,50 @@ class UserReportController extends Controller
 
         return $this->userReportService->getReportsForDataTable($filters);
     }
+
+    /**
+     * Display dashboard with pie charts for user reports.
+     *
+     * @param Request $request
+     * @return View
+     */
+    public function dashboard(Request $request): View
+    {
+        $query = UserReport::with(['user', 'project']);
+        
+        // Apply date filters if provided
+        if ($request->has('from_date') && $request->has('to_date')) {
+            $query->whereBetween('date', [$request->from_date, $request->to_date]);
+        }
+        
+        // Get all reports with relationships
+        $reports = $query->get();
+        
+        // Group and aggregate data by user name and project name
+        $userData = $reports->groupBy(function($report) {
+            return $report->user->name;
+        })->map(function($userReports) {
+            return $userReports->groupBy(function($report) {
+                return $report->project->name;
+            })->map(function($projectReports) {
+                return [
+                    'tasks_tested' => $projectReports->sum('task_tested'),
+                    'bugs_reported' => $projectReports->sum('bug_reported'),
+                    'regression_testing' => $projectReports->sum('regression'),
+                    'smoke_testing' => $projectReports->sum('smoke_testing'),
+                    'client_meeting' => $projectReports->sum('client_meeting'),
+                    'daily_meeting' => $projectReports->sum('daily_meeting'),
+                    'mobile_testing' => $projectReports->sum('mobile_testing'),
+                    'automation_testing' => $projectReports->sum('automation'),
+                    'other' => $projectReports->sum('other')
+                ];
+            });
+        });
+        
+        $dateOptions = $this->userReportService->getDateOptions();
+        
+        return view('qareport.dashboard', compact('userData', 'dateOptions'));
+    }
 }
+
+
