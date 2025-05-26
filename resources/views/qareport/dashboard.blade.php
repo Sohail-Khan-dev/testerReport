@@ -61,7 +61,22 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Add Chart.js Datalabels plugin -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+  <!-- Clock Display -->
+  <div id="clock" style="position: fixed; bottom: 20px; right: 20px; background-color: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 1.1em; font-weight: bold;"></div>
+
   <script>
+    // Clock update function
+    function updateClock() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+      document.getElementById('clock').textContent = timeString;
+    }
+
+    // Update clock immediately and then every second
+    updateClock();
+    setInterval(updateClock, 1000);
+
     document.addEventListener('DOMContentLoaded', function() {
       // Register the datalabels plugin
       Chart.register(ChartDataLabels);
