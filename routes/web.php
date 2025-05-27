@@ -1,13 +1,14 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserReportController;
 use App\Http\Controllers\EmailPreferenceController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 
 Route::get('/', function () {
     if(Auth::check()){
@@ -61,6 +62,10 @@ Route::get('test',function(){
 });
 
 require __DIR__.'/auth.php';
+Route::get('/trigger-daily-email', function () {
+    Artisan::call('app:send-daily-notifications');
+    return 'Triggered';
+});
 
 
 Route::get('/layout',function(){
