@@ -9,7 +9,10 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserReportController;
 use App\Http\Controllers\EmailPreferenceController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-
+Route::get('/trigger-daily-email', function () {
+    Artisan::call('app:send-daily-notifications');
+    return 'Triggered';
+});
 Route::get('/', function () {
     if(Auth::check()){
         if(Gate::allows('is-admin'))
@@ -62,10 +65,7 @@ Route::get('test',function(){
 });
 
 require __DIR__.'/auth.php';
-Route::get('/trigger-daily-email', function () {
-    Artisan::call('app:send-daily-notifications');
-    return 'Triggered';
-});
+
 
 
 Route::get('/layout',function(){
