@@ -100,24 +100,24 @@
         let loadingModal  = null;
         function showLoading(isDataTable = false) {
             // Bootstrap 5 uses different modal syntax
-            loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
-            loadingModal.show();
+            // loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+            // loadingModal.show();
 
-            if (isDataTable) {
-                $("#loadingSvg").addClass('d-none');
-                $(".loader").removeClass('d-none');
-            } else {
-                $("#loadingSvg").removeClass('d-none');
-                $(".loader").addClass('d-none');
-            }
+            // if (isDataTable) {
+            //     $("#loadingSvg").addClass('d-none');
+            //     $(".loader").removeClass('d-none');
+            // } else {
+            //     $("#loadingSvg").removeClass('d-none');
+            //     $(".loader").addClass('d-none');
+            // }
         }
 
         function hideLoading() {
             // const loadingModal = bootstrap.Modal.getInstance(document.getElementById('loadingModal'));
            
-            if (loadingModal) {
-                loadingModal.hide();
-            }
+            // if (loadingModal) {
+            //     loadingModal.hide();
+            // }
         }
     </script>
   
