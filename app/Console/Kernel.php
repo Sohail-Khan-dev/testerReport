@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     {
         
         $schedule->command('app:send-daily-notifications')
-                ->dailyAt('15:10') // Server time is EDT, 9 hours behind Pakistan
+                ->dailyAt('12:31') // Server time is EDT, 9 hours behind Pakistan
                 ->weekdays() // This automatically excludes Saturday and Sunday
                 ->appendOutputTo(storage_path('logs/daily-notifications.log'));
     }

@@ -9,10 +9,10 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserReportController;
 use App\Http\Controllers\EmailPreferenceController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-Route::get('/trigger-daily-email', function () {
-    Artisan::call('app:send-daily-notifications');
-    return 'Triggered';
-});
+// Route::get('/trigger-daily-email', function () {
+//     Artisan::call('app:send-daily-notifications');
+//     return 'Triggered';
+// });
 Route::get('/', function () {
     if(Auth::check()){
         if(Gate::allows('is-admin'))
@@ -79,3 +79,6 @@ Route::get('/modal',function(){
 // Email preference routes
 Route::get('/unsubscribe/{user}', [EmailPreferenceController::class, 'unsubscribe'])->name('email.unsubscribe');
 Route::post('/email-preferences/{user}', [EmailPreferenceController::class, 'update'])->name('email.preferences.update');
+
+
+// /usr/local/bin/php /home/qaadxdgj/report.qaadvance.com/artisan app:send-daily-notifications >> /home/qaadxdgj/cron.log
