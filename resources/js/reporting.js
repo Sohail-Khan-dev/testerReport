@@ -291,11 +291,11 @@ document.addEventListener('DOMContentLoaded', function () {
             dom: '<"top" f> rtlp',
             responsive: false,
             paging: true,
-            scrollX: true,  // Enable horizontal scrolling
-            scrollY: "400px", // Add vertical scrolling to stabilize layout
-            scrollCollapse: true,
-            autoWidth: false,
-            fixedColumns: false, // Disable fixed columns to prevent layout shifts
+            // scrollX: true,  // Enable horizontal scrolling
+            // scrollY: "500px", // Add vertical scrolling to stabilize layout
+            // scrollCollapse: true,
+            // autoWidth: false,
+            // fixedColumns: false, // Disable fixed columns to prevent layout shifts
             ajax: {
                 url: reportsDataRoute,
                 data: function (d) {
@@ -304,12 +304,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     d.user_id = $('#user-name').val();
                     d.project_id = $('#project-name').val();
                 },
-                // beforeSend: function () {
-                //     showLoading(true);
-                // },
-                // complete: function () {
-                //     hideLoading();
-                // }
+            
             },
             columns: [
                 { data: 'date', name: 'date', width: '150px', orderable: false, searchable: false    },
@@ -392,83 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $(api.column(9).footer()).html(totalMobile !== undefined ? totalMobile : '0');
             },
             initComplete: function () {
-                var api = this.api();
-
-                // Function to fix alignment issues
-                function fixTableAlignment() {
-                    // Force column adjustment
-                    api.columns.adjust();
-
-                    // Get the actual table width
-                    var tableWidth = $('#reports-table').outerWidth();
-
-                    // // Ensure all scroll containers have consistent styling
-                    $('.dataTables_scrollHead, .dataTables_scrollFoot').css({
-                        'width': '100%',
-                        'margin': '0',
-                        'padding': '0',
-                        'position': 'relative',
-                        'left': '0',
-                        'transform': 'translateX(0)'
-                    });
-
-                    // Ensure inner containers match and force remove padding
-                    $('.dataTables_scrollHeadInner, .dataTables_scrollFootInner').css({
-                        'width': tableWidth + 'px',
-                        'margin': '0',
-                        'padding': '0',
-                        'padding-right': '0',
-                        'padding-left': '0',
-                        'box-sizing': 'border-box'
-                    });
-
-                    // Force remove padding with direct style manipulation
-                    $('.dataTables_scrollFootInner, .dataTables_scrollHeadInner').each(function() {
-                        this.style.setProperty('padding-right', '0', 'important');
-                        this.style.setProperty('padding-left', '0', 'important');
-                        this.style.setProperty('padding', '0', 'important');
-                    });
-
-                    // // Force all tables to have the same width and layout
-                    $('.dataTables_scrollHead table, table, .dataTables_scrollFoot table').css({
-                        'width': tableWidth + 'px',
-                        'table-layout': 'fixed',
-                        'margin': '0',
-                        'position': 'relative',
-                        'left': '0'
-                    });
-
-                    // Synchronize column widths between header, body, and footer
-                    // api.columns().every(function (index) {
-                    //     var headerCell = $(this.header());
-                    //     var footerCell = $(this.footer());
-                    //     var headerWidth = headerCell.outerWidth();
-
-                    //     if (footerCell.length) {
-                    //         footerCell.css({
-                    //             'width': headerWidth + 'px',
-                    //             'min-width': headerWidth + 'px',
-                    //             'max-width': headerWidth + 'px'
-                    //         });
-                    //     }
-                    // });
-                }
-
-                // Initial fix
-                setTimeout(fixTableAlignment, 100);
-
-                // Store the function for later use
-                window.fixDataTableAlignment = fixTableAlignment;
-
-                // Add immediate resize listener for dimension changes
-                $(window).on('resize.dataTableFix', function () {
-                    clearTimeout(window.resizeTimer);
-                    window.resizeTimer = setTimeout(function () {
-                        if ($.fn.DataTable.isDataTable('#reports-table')) {
-                            fixTableAlignment();
-                        }
-                    }, 100);
-                });
+                
             }
         });
     }
