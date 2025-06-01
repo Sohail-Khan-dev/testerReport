@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-center" tabindex="-1" role="dialog" aria-labelledby="modal-centerTitle"
+<div class="modal fade" id="add-project" tabindex="-1" role="dialog" aria-labelledby="modal-centerTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -11,6 +11,7 @@
             <div class="modal-body">
                 <form id="projectForm">
                     @csrf
+                    <input type="hidden" id="project_id" name="id">
                     <div class="row row-cols-2">
                         <div class="form-group">
                             <label for="name">Name</label>
@@ -23,7 +24,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary" id="add-project-submit">Submit</button>
                     </div>
                 </form>
             </div>

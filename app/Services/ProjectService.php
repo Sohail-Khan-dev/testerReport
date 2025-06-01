@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Project;
 use App\Http\Resources\ProjectResource;
-use App\Repositories\Interfaces\ProjectRepositoryInterface;
 use Yajra\DataTables\Facades\DataTables;
+use App\Repositories\Interfaces\ProjectRepositoryInterface;
 
 class ProjectService
 {
@@ -83,7 +84,7 @@ class ProjectService
      */
     public function getAllProjects()
     {
-        $projects = $this->projectRepository->all();
+        $projects = Project::with('users')->all();
         return ProjectResource::collection($projects);
     }
 
@@ -106,8 +107,7 @@ class ProjectService
      */
     public function getProjectsForDataTable()
     {
-        $projects = $this->projectRepository->all();
-
+        $projects = Project::with('users')->get();
         return DataTables::of($projects)
             ->addColumn('action', function($project) {
                 $actions = '<div class="d-flex">';
@@ -120,4 +120,43 @@ class ProjectService
             ->rawColumns(['action'])
             ->make(true);
     }
+
+    /**
+     * Get project by ID
+     *
+     * @param int $id
+     * @return Project|null
+     */
+    public function getProjectById(int $id)
+    {
+        return Project::find($id);
+    }
+
+    // /**
+    //  * Update project
+    //  *
+    //  * @param array $data
+    //  * @return Project
+    //  */
+    // public function updateProject(array $data)
+    // {
+    //     $project = Project::findOrFail($data['id']);
+    //     $project->update($data);
+    //     return $project;
+    // }
+
+    // /**
+    //  * Delete project
+    //  *
+    //  * @param int $id
+    //  * @return bool
+    //  */
+    // public function deleteProject(int $id): bool
+    // {
+    //     $project = Project::find($id);
+    //     if ($project) {
+    //         return $project->delete();
+    //     }
+    //     return false;
+    // }
 }

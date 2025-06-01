@@ -26,6 +26,7 @@
                                 <th> Name</th>
                                 <th> Email</th>
                                 <th> Role </th>
+                                <th> Projects </th>
                                 <th> Action </th>
                             </tr>
                         </thead>
@@ -246,7 +247,7 @@
         });
         loadUsers();
         function loadUsers(){
-            console.log("Called load users");
+
           if($.fn.dataTable.isDataTable('#user-table')){
               $('#user-table').DataTable().clear().destroy();
           }
@@ -256,19 +257,13 @@
                 dom: '<"top"f> rt<"bottom"ip><"clear">',
                 ajax: {
                     url:'{{ route("users.data") }}',
-                    beforeSend:function(){
-                        console.log("Called before send");
-                        showLoading(true);
-                    },
-                    complete : function(){
-                        console.log("Called complete");
-                        hideLoading();
-                    }
                 },
                 columns: [
                     { data: 'name', name: 'name' },
                     { data: 'email', name: 'email' },
                     { data: 'role', name: 'role' },
+                    // I want to add width to this column below
+                    { data: 'projects', name: 'projects', width: '30%' },
                     { data: 'action', name: 'action'}
                 ]
             });

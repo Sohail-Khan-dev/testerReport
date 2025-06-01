@@ -80,5 +80,8 @@ Route::get('/modal',function(){
 Route::get('/unsubscribe/{user}', [EmailPreferenceController::class, 'unsubscribe'])->name('email.unsubscribe');
 Route::post('/email-preferences/{user}', [EmailPreferenceController::class, 'update'])->name('email.preferences.update');
 
+Route::get('/project/{id}/edit', [ProjectController::class, 'edit'])->name('project.edit');
+Route::delete('/project/{id}', [ProjectController::class, 'destroy'])->name('project.destroy');
+Route::put('/project/{id}', [ProjectController::class, 'update'])->name('project.update');
 
 // /usr/local/bin/php /home/qaadxdgj/report.qaadvance.com/artisan app:send-daily-notifications >> /home/qaadxdgj/cron.log

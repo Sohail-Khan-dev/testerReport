@@ -121,7 +121,7 @@ class RegisteredUserController extends Controller
      * @throws Exception
      */
     public function getAllUser(){
-        $users = User::select(['id','name','email','role']);
+        $users = User::with('projects')->select(['id','name','email','role']);
         return datatables($users)
             ->addColumn('action',function ($row){
 
@@ -129,7 +129,7 @@ class RegisteredUserController extends Controller
                 if($row->id != auth()->user()->id) {
                     $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="deleteUser"><i class="fa-solid fa-trash f-18 cursor-pointer"></i></a>';
                     $buttons .= '<a href="javascript:void(0)" data-id="'.$row->id.'"   class="loginUser"><i class="fa fa-sign-in f-18 cursor-pointer" aria-hidden="true"></i></a>';
-                }
+                }                
                 // Enable/Disable toggle (You can use a condition to display the correct state)
 //                if ($row->is_active) {
 //                    $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="toggleStatus"><i class="fa fa-refresh f-18"></i></a>';
@@ -137,6 +137,9 @@ class RegisteredUserController extends Controller
 //                    $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="toggleStatus"><i class="fa fa-refresh f-18"></i></a>';
 //                }
                 return "<div class='users-button-div'>". $buttons . "</div>";
+            })
+            ->addColumn('projects', function ($row) {
+                return $row->projects->pluck('name')->implode(', ');
             })
             ->make(true);
     }
