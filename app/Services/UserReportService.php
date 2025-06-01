@@ -118,7 +118,8 @@ class UserReportService
 
         // Order by created_at desc by default
         $query->orderBy('created_at', 'desc');
-
+        // I want to show the time with date when it is displayed. 
+        
         return DataTables::of($query)
             ->filterColumn('user_name', function($query, $keyword) {
                 $query->whereHas('user', function($query) use ($keyword) {
@@ -135,6 +136,15 @@ class UserReportService
             })
             ->addColumn('project_name', function($report) {
                 return $report->project->name;
+            })
+            ->editColumn('date', function($report) {
+                // Format date with time
+                // dd($report);
+                $date = Carbon::parse($report->date);
+                $time = Carbon::parse($report->created_at)->format('H:i:s');
+                // Add 5 hour to the time 
+                // $time = Carbon::parse($time)->addHours(5)->format('H:i:s');
+                return $date->format('Y-m-d') . ' ' . $time;
             })
             ->addColumn('action', function($report) {
                 $actions = '<i class="deleteReport fa-trash fa-solid f-18 cursor-pointer" data-id="'.$report->id .'"> </i>';

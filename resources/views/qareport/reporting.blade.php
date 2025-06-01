@@ -86,7 +86,7 @@
                         <table id="reports-table" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr class="text-center">
-                                <th> Date</th>
+                                <th> Date&Time</th>
                                 <th> Name</th>
                                 <th> Project</th>
                                 <th> Tasks<br>Tested</th>

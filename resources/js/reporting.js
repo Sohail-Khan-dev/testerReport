@@ -304,15 +304,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     d.user_id = $('#user-name').val();
                     d.project_id = $('#project-name').val();
                 },
-                beforeSend: function () {
-                    showLoading(true);
-                },
-                complete: function () {
-                    hideLoading();
-                }
+                // beforeSend: function () {
+                //     showLoading(true);
+                // },
+                // complete: function () {
+                //     hideLoading();
+                // }
             },
             columns: [
-                { data: 'date', name: 'date', width: '100px' },
+                { data: 'date', name: 'date', width: '150px', orderable: false, searchable: false    },
                 { data: 'user_name', name: 'user_name', searchable: true, width: '120px' },
                 { data: 'project_name', name: 'project_name', searchable: true, width: '120px' },
                 { data: 'task_tested', name: 'task_tested', width: '80px' },
