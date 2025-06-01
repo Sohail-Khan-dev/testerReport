@@ -143,7 +143,7 @@ class UserReportService
                 $date = Carbon::parse($report->date);
                 $time = Carbon::parse($report->created_at)->format('H:i:s');
                 // Add 5 hour to the time 
-                // $time = Carbon::parse($time)->addHours(5)->format('H:i:s');
+                $time = Carbon::parse($time)->addHours(5)->format('H:i:s');
                 return $date->format('Y-m-d') . ' ' . $time;
             })
             ->addColumn('action', function($report) {
