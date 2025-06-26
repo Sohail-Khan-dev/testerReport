@@ -4,8 +4,19 @@
       <div class="col-12">
         <div class="card shadow-sm mb-4">
           <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
             <h1 class="card-title h3 mb-4">QA Testing Activity Dashboard</h1>
-            
+              <div class="d-flex gap-4 align-items-center">
+                <button type="button" class="btn btn-primary" id="send-email-button">
+                 <span id="send-email-btn-text">Send Email</span>
+                  <span id="send-email-btn-spinner" class="spinner-border spinner-border-sm ms-2" style="display: none;" role="status" aria-hidden="true"></span>
+                </button>
+                <!-- Show text here when the Email is sent successfully -->   
+                <div id="email-sent-message" style="display: none;">
+                  Email sent successfully!
+                </div>
+              </div>
+            </div>
             <!-- Date Filter Form -->
             <div class="bg-light p-3 rounded mb-4">
               <form method="GET" action="{{ route('dashboard') }}" class="row g-3">
@@ -154,6 +165,31 @@
           }
         });
       });
+        document.getElementById('send-email-button').addEventListener('click', function() {
+          document.getElementById('send-email-button').disabled = true;
+          const btnSpinner = document.getElementById('send-email-btn-spinner');
+          btnSpinner.style.display = 'inline-block';
+          
+          axios.post('/send-daily-notifications')
+            .then(function(response) {
+              console.log(response.data);
+              btnSpinner.style.display = 'none';
+              document.getElementById('email-sent-message').style.display = 'block';
+              Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: response.data.message,
+                timer: 3000,
+                showConfirmButton: false
+              });
+            })
+            .catch(function(error) {
+              let message = 'An error occurred while sending the email.';
+              document.getElementById('email-sent-message').style.display = 'none';
+              document.getElementById("email-sent-message").textContent = message;
+              console.error(error);
+            });
+        });
     });
   </script>
 </x-app-layout>

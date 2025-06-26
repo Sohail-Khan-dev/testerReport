@@ -50,6 +50,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/report',[UserReportController::class,'delete'])->name('user-reports.delete');
 
         Route::get('/show-dashboared', [UserReportController::class, 'dashboard'])->name('dashboard.show');
+        Route::post('/send-daily-notifications', function () {
+            Artisan::call('app:send-daily-notifications');
+            return response()->json(['message' => 'Emails sent successfully']);
+        })->name('send-daily-notifications');
     });
 
     Route::post('/report',[UserReportController::class,'store'])->name('user-reports.store');
