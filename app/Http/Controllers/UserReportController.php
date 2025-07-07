@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserReportRequest;
-use App\Http\Requests\UpdateUserReportRequest;
 use App\Models\Project;
 use App\Models\User;
 use App\Services\UserReportService;
@@ -140,20 +139,34 @@ class UserReportController extends Controller
 
         return $this->userReportService->getReportsForDataTable($filters);
     }
+public function viewDashboard(Request $request): View
+    {
+        $userData = $this->getDashboardData($request);
+        $dateOptions = $this->userReportService->getDateOptions();
+        $users = User::pluck('id', 'name');
+        $projects = Project::pluck('id', 'name');
 
-    /**
-     * Display dashboard with pie charts for user reports.
-     *
-     * @param Request $request
-     * @return View
-     */
-    public function dashboard(Request $request): View
+        return view('qareport.dashboard', compact('userData', 'dateOptions', 'users', 'projects'));
+    }
+    public function getDashboardData(Request $request)
     {
         $query = UserReport::with(['user', 'project']);
-        
         // Apply date filters if provided
         if ($request->has('from_date') && $request->has('to_date')) {
             $query->whereBetween('date', [$request->from_date, $request->to_date]);
+        }else{
+            // Default to last 30 days if no date filters are provided
+            $query->where('date', '>=', now()->subDays(30));
+        }
+
+        // Apply user filter if provided
+        if ($request->has('user')) {
+            $query->where('user_id', $request->user);
+        }
+
+        // Apply project filter if provided
+        if ($request->has('project')) {
+            $query->where('project_id', $request->project);
         }
         
         // Get all reports with relationships
@@ -161,28 +174,28 @@ class UserReportController extends Controller
         
         // Group and aggregate data by user name and project name
         $userData = $reports->groupBy(function($report) {
-            return $report->user->name;
-        })->map(function($userReports) {
-            return $userReports->groupBy(function($report) {
-                return $report->project->name;
-            })->map(function($projectReports) {
+            return $report->project->name;
+        })->map(function($projectReports) {
                 return [
                     'tasks_tested' => $projectReports->sum('task_tested'),
                     'bugs_reported' => $projectReports->sum('bug_reported'),
-                    'regression_testing' => $projectReports->sum('regression'),
-                    'smoke_testing' => $projectReports->sum('smoke_testing'),
-                    'client_meeting' => $projectReports->sum('client_meeting'),
+                    // 'regression_testing' => $projectReports->sum('regression'),
+                    // 'smoke_testing' => $projectReports->sum('smoke_testing'),
+                    // 'client_meeting' => $projectReports->sum('client_meeting'),
                     'daily_meeting' => $projectReports->sum('daily_meeting'),
-                    'mobile_testing' => $projectReports->sum('mobile_testing'),
-                    'automation_testing' => $projectReports->sum('automation'),
+                    // 'mobile_testing' => $projectReports->sum('mobile_testing'),
+                    // 'automation_testing' => $projectReports->sum('automation'),
                     // 'other' => $projectReports->sum('other')
                 ];
             });
-        });
-        
-        $dateOptions = $this->userReportService->getDateOptions();
-        
-        return view('qareport.dashboard', compact('userData', 'dateOptions'));
+        return $userData;
+        return response()->json([
+            'userData' => $userData
+        ]);
+        // $users = User::pluck('id', 'name');
+        // $projects = Project::pluck('id', 'name');
+
+        // return view('qareport.dashboard', compact('userData', 'dateOptions', 'users', 'projects'));
     }
 }
 
