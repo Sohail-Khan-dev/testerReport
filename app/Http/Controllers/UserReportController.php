@@ -10,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\UserReport;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserReportController extends Controller
 {
@@ -59,9 +61,9 @@ class UserReportController extends Controller
      */
     public function index(): View
     {
-        $users = User::all();
+        $users = User::select('id', 'name')->get();
         $projects = auth()->user()->projects;
-        $allprojects = Project::all();
+        $allprojects = Project::select('id', 'name')->get();
         $dateOptions = $this->userReportService->getDateOptions();
 
         return view('qareport.reporting', compact([
@@ -139,64 +141,70 @@ class UserReportController extends Controller
 
         return $this->userReportService->getReportsForDataTable($filters);
     }
-public function viewDashboard(Request $request): View
+    public function viewDashboard(Request $request): View
     {
-        $userData = $this->getDashboardData($request);
+        // Data will be fetched via AJAX, so we pass an empty collection initially.
+        $userData = collect();
         $dateOptions = $this->userReportService->getDateOptions();
-        $users = User::pluck('id', 'name');
-        $projects = Project::pluck('id', 'name');
-
+        $users = User::pluck('name', 'id');
+        $projects = Project::pluck('name', 'id');
+        // dd($users, $projects);
         return view('qareport.dashboard', compact('userData', 'dateOptions', 'users', 'projects'));
     }
-    public function getDashboardData(Request $request)
+    
+    public function getDashboardDataAjax(Request $request)
     {
-        $query = UserReport::with(['user', 'project']);
-        // Apply date filters if provided
-        if ($request->has('from_date') && $request->has('to_date')) {
-            $query->whereBetween('date', [$request->from_date, $request->to_date]);
-        }else{
-            // Default to last 30 days if no date filters are provided
-            $query->where('date', '>=', now()->subDays(30));
-        }
+        try {
+            $query = UserReport::query()
+                ->join('projects', 'user_reports.project_id', '=', 'projects.id')
+                ->join('users', 'user_reports.user_id', '=', 'users.id')
+                ->select(
+                    'projects.name as project_name',
+                    DB::raw('CAST(SUM(user_reports.task_tested) AS UNSIGNED) as tasks_tested'),
+                    DB::raw('CAST(SUM(user_reports.bug_reported) AS UNSIGNED) as bugs_reported'),
+                    DB::raw('CAST(SUM(CASE WHEN user_reports.daily_meeting = 1 THEN 1 ELSE 0 END) AS UNSIGNED) as daily_meeting'),
+                    DB::raw('CAST(SUM(CASE WHEN user_reports.client_meeting = 1 THEN 1 ELSE 0 END) AS UNSIGNED) as client_meeting'),
+                    DB::raw('CAST(SUM(CASE WHEN user_reports.regression = 1 THEN 1 ELSE 0 END) AS UNSIGNED) as regression'),
+                    DB::raw('CAST(SUM(CASE WHEN user_reports.smoke_testing = 1 THEN 1 ELSE 0 END) AS UNSIGNED) as smoke_testing'),
+                    DB::raw('CAST(SUM(CASE WHEN user_reports.mobile_testing = 1 THEN 1 ELSE 0 END) AS UNSIGNED) as mobile_testing'),
+                    DB::raw('CAST(SUM(CASE WHEN user_reports.automation = 1 THEN 1 ELSE 0 END) AS UNSIGNED) as automation')
+                )
+                ->groupBy('projects.name');
 
-        // Apply user filter if provided
-        if ($request->has('user')) {
-            $query->where('user_id', $request->user);
-        }
+            if ($request->filled('from_date') && $request->filled('to_date')) {
+                $query->whereBetween('user_reports.date', [$request->from_date, $request->to_date]);
+            }
 
-        // Apply project filter if provided
-        if ($request->has('project')) {
-            $query->where('project_id', $request->project);
-        }
-        
-        // Get all reports with relationships
-        $reports = $query->get();
-        
-        // Group and aggregate data by user name and project name
-        $userData = $reports->groupBy(function($report) {
-            return $report->project->name;
-        })->map(function($projectReports) {
-                return [
-                    'tasks_tested' => $projectReports->sum('task_tested'),
-                    'bugs_reported' => $projectReports->sum('bug_reported'),
-                    // 'regression_testing' => $projectReports->sum('regression'),
-                    // 'smoke_testing' => $projectReports->sum('smoke_testing'),
-                    // 'client_meeting' => $projectReports->sum('client_meeting'),
-                    'daily_meeting' => $projectReports->sum('daily_meeting'),
-                    // 'mobile_testing' => $projectReports->sum('mobile_testing'),
-                    // 'automation_testing' => $projectReports->sum('automation'),
-                    // 'other' => $projectReports->sum('other')
-                ];
-            });
-        return $userData;
-        return response()->json([
-            'userData' => $userData
-        ]);
-        // $users = User::pluck('id', 'name');
-        // $projects = Project::pluck('id', 'name');
+            if ($request->filled('user') && $request->user !== 'All Users') {
+                $query->where('user_reports.user_id', $request->user);
+            }
 
-        // return view('qareport.dashboard', compact('userData', 'dateOptions', 'users', 'projects'));
+            if ($request->filled('project') && $request->project !== 'All Projects') {
+                $query->where('user_reports.project_id', $request->project);
+            }
+
+            $aggregatedData = $query->get();
+
+            // Log for debugging
+            Log::info('Dashboard query executed successfully', [
+                'filters' => $request->only(['from_date', 'to_date', 'user', 'project']),
+                'result_count' => $aggregatedData->count(),
+                'sql' => $query->toSql()
+            ]);
+
+            return response()->json(['userData' => $aggregatedData]);
+
+        } catch (\Exception $e) {
+            Log::error('Dashboard data fetch error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to fetch dashboard data',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }
-
-
