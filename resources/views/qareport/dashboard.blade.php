@@ -102,14 +102,20 @@
         id: 'centerText',
         afterDraw: (chart) => {
           if (chart.config.type !== 'doughnut') return;
-          
+
           const { ctx, chartArea: { top, right, bottom, left, width, height } } = chart;
-          const total = chart.config.data.datasets[0].data.reduce((a, b) => a + b, 0);
+          // Ensure we're working with numbers and handle any potential null/undefined values
+          const data = chart.config.data.datasets[0].data;
+          const total = data.reduce((a, b) => {
+            const numA = parseInt(a) || 0;
+            const numB = parseInt(b) || 0;
+            return numA + numB;
+          }, 0);
 
           if (total === 0) return;
 
           ctx.save();
-          
+
           // Title
           ctx.font = '1rem sans-serif';
           ctx.textAlign = 'center';
@@ -122,7 +128,7 @@
           // Value
           ctx.font = 'bold 1.5rem sans-serif';
           ctx.fillStyle = '#333';
-          ctx.fillText(total, centerX, centerY + 15);
+          ctx.fillText(total.toString(), centerX, centerY + 15);
 
           ctx.restore();
         }
@@ -145,6 +151,14 @@
         const to_date = document.getElementById('to_date').value;
         const user = document.getElementById('user').value;
         const project = document.getElementById('project').value;
+
+        // Debug logging
+        console.log('Filter values:', {
+          from_date: from_date,
+          to_date: to_date,
+          user: user,
+          project: project
+        });
 
         document.getElementById('charts-container').innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
 
@@ -211,9 +225,9 @@
         };
 
         userData.forEach(project => {
-          totals.tasks_tested += project.tasks_tested;
-          totals.bugs_reported += project.bugs_reported;
-          totals.daily_meeting += project.daily_meeting;
+          totals.tasks_tested += parseInt(project.tasks_tested) || 0;
+          totals.bugs_reported += parseInt(project.bugs_reported) || 0;
+          totals.daily_meeting += parseInt(project.daily_meeting) || 0;
         });
 
         const data = [
@@ -303,10 +317,11 @@
           container.appendChild(card);
 
           const ctx = document.getElementById(canvasId);
+          // Ensure all values are properly converted to integers
           const data = [
-            project.tasks_tested,
-            project.bugs_reported,
-            project.daily_meeting
+            parseInt(project.tasks_tested) || 0,
+            parseInt(project.bugs_reported) || 0,
+            parseInt(project.daily_meeting) || 0
             // Add other metrics from the response here
           ];
           const total = data.reduce((a, b) => a + b, 0);
@@ -334,7 +349,8 @@
                 centerText: {}, // Enable our custom plugin
                 datalabels: {
                   formatter: (value, ctx) => {
-                    const percentage = Math.round((value / total) * 100);
+                    const numValue = parseInt(value) || 0;
+                    const percentage = Math.round((numValue / total) * 100);
                     if (percentage < 5) return '';
                     return percentage + '%';
                   },
@@ -355,7 +371,7 @@
                   callbacks: {
                     label: function(context) {
                       const label = context.label || '';
-                      const value = context.raw || 0;
+                      const value = parseInt(context.raw) || 0;
                       const percentage = Math.round((value / total) * 100);
                       return `${label}: ${value} (${percentage}%)`;
                     }

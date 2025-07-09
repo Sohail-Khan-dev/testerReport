@@ -146,8 +146,8 @@ class UserReportController extends Controller
         // Data will be fetched via AJAX, so we pass an empty collection initially.
         $userData = collect();
         $dateOptions = $this->userReportService->getDateOptions();
-        $users = User::pluck('name', 'id');
-        $projects = Project::pluck('name', 'id');
+        $users = User::pluck('id', 'name');
+        $projects = Project::pluck('id', 'name');
         // dd($users, $projects);
         return view('qareport.dashboard', compact('userData', 'dateOptions', 'users', 'projects'));
     }
@@ -175,11 +175,11 @@ class UserReportController extends Controller
                 $query->whereBetween('user_reports.date', [$request->from_date, $request->to_date]);
             }
 
-            if ($request->filled('user') && $request->user !== 'All Users') {
+            if ($request->filled('user') && $request->user !== '' && $request->user !== 'All Users') {
                 $query->where('user_reports.user_id', $request->user);
             }
 
-            if ($request->filled('project') && $request->project !== 'All Projects') {
+            if ($request->filled('project') && $request->project !== '' && $request->project !== 'All Projects') {
                 $query->where('user_reports.project_id', $request->project);
             }
 
@@ -188,6 +188,14 @@ class UserReportController extends Controller
             // Log for debugging
             Log::info('Dashboard query executed successfully', [
                 'filters' => $request->only(['from_date', 'to_date', 'user', 'project']),
+                'filter_conditions' => [
+                    'from_date_filled' => $request->filled('from_date'),
+                    'to_date_filled' => $request->filled('to_date'),
+                    'user_filled' => $request->filled('user'),
+                    'user_value' => $request->user,
+                    'project_filled' => $request->filled('project'),
+                    'project_value' => $request->project,
+                ],
                 'result_count' => $aggregatedData->count(),
                 'sql' => $query->toSql()
             ]);
