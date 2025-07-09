@@ -73,6 +73,54 @@
               </div>
             </div>
 
+            <!-- Section Header -->
+            <div class="row mb-3">
+              <div class="col-12">
+                <h4 class="text-muted border-bottom pb-2">Project-wise Analysis</h4>
+              </div>
+            </div>
+
+            <!-- Project-wise Bar Charts -->
+            <div class="row mb-4">
+              <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card shadow-sm h-100">
+                  <div class="card-body">
+                    <h5 class="card-title text-center">Tasks Tested by Project</h5>
+                    <div style="height: 300px;">
+                      <canvas id="tasks-tested-chart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card shadow-sm h-100">
+                  <div class="card-body">
+                    <h5 class="card-title text-center">Bugs Reported by Project</h5>
+                    <div style="height: 300px;">
+                      <canvas id="bugs-reported-chart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-12 mb-3">
+                <div class="card shadow-sm h-100">
+                  <div class="card-body">
+                    <h5 class="card-title text-center">Client Meetings by Project</h5>
+                    <div style="height: 300px;">
+                      <canvas id="client-meetings-chart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section Header -->
+            <div class="row mb-3">
+              <div class="col-12">
+                <h4 class="text-muted border-bottom pb-2">Project Distribution</h4>
+              </div>
+            </div>
+
             <!-- Charts Container -->
             <div class="row" id="charts-container">
               @if($userData->isEmpty())
@@ -145,6 +193,9 @@
 
       let totalBarChartInstance = null;
       let projectChartInstances = {};
+      let tasksTestedChartInstance = null;
+      let bugsReportedChartInstance = null;
+      let clientMeetingsChartInstance = null;
 
       function fetchAndRenderCharts() {
         const from_date = document.getElementById('from_date').value;
@@ -178,6 +229,7 @@
           .then(response => {
             console.log('Chart data received:', response.data);
             renderTotalBarChart(response.data.userData);
+            renderProjectWiseBarCharts(response.data.userData);
             renderProjectCumulativeCharts(response.data.userData);
           })
           .catch(error => {
@@ -282,6 +334,147 @@
               }
             }
           }
+        });
+      }
+
+      function renderProjectWiseBarCharts(userData) {
+        // Destroy previous chart instances
+        if (tasksTestedChartInstance) {
+          tasksTestedChartInstance.destroy();
+        }
+        if (bugsReportedChartInstance) {
+          bugsReportedChartInstance.destroy();
+        }
+        if (clientMeetingsChartInstance) {
+          clientMeetingsChartInstance.destroy();
+        }
+
+        if (!userData || userData.length === 0) {
+          // Hide charts if no data
+          document.getElementById('tasks-tested-chart').closest('.card').style.display = 'none';
+          document.getElementById('bugs-reported-chart').closest('.card').style.display = 'none';
+          document.getElementById('client-meetings-chart').closest('.card').style.display = 'none';
+          return;
+        }
+
+        // Show charts
+        document.getElementById('tasks-tested-chart').closest('.card').style.display = 'block';
+        document.getElementById('bugs-reported-chart').closest('.card').style.display = 'block';
+        document.getElementById('client-meetings-chart').closest('.card').style.display = 'block';
+
+        // Prepare data
+        const projectNames = userData.map(project => {
+          // Truncate long project names for better display
+          const name = project.project_name;
+          return name.length > 15 ? name.substring(0, 15) + '...' : name;
+        });
+        const tasksTestedData = userData.map(project => parseInt(project.tasks_tested) || 0);
+        const bugsReportedData = userData.map(project => parseInt(project.bugs_reported) || 0);
+        const clientMeetingsData = userData.map(project => parseInt(project.client_meeting) || 0);
+
+        // Common chart options
+        const commonOptions = {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            datalabels: {
+              anchor: 'end',
+              align: 'top',
+              formatter: (value) => value > 0 ? value : '',
+              color: '#444',
+              font: {
+                weight: 'bold',
+                size: 10
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              borderColor: '#ddd',
+              borderWidth: 1
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0,
+                color: '#666'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.1)'
+              }
+            },
+            x: {
+              ticks: {
+                maxRotation: 45,
+                minRotation: 0,
+                color: '#666',
+                font: {
+                  size: 11
+                }
+              },
+              grid: {
+                display: false
+              }
+            }
+          },
+          animation: {
+            duration: 1000,
+            easing: 'easeInOutQuart'
+          }
+        };
+
+        // Tasks Tested Chart
+        tasksTestedChartInstance = new Chart(document.getElementById('tasks-tested-chart'), {
+          type: 'bar',
+          data: {
+            labels: projectNames,
+            datasets: [{
+              label: 'Tasks Tested',
+              data: tasksTestedData,
+              backgroundColor: 'rgba(54, 162, 235, 0.6)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: commonOptions
+        });
+
+        // Bugs Reported Chart
+        bugsReportedChartInstance = new Chart(document.getElementById('bugs-reported-chart'), {
+          type: 'bar',
+          data: {
+            labels: projectNames,
+            datasets: [{
+              label: 'Bugs Reported',
+              data: bugsReportedData,
+              backgroundColor: 'rgba(255, 99, 132, 0.6)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: commonOptions
+        });
+
+        // Client Meetings Chart
+        clientMeetingsChartInstance = new Chart(document.getElementById('client-meetings-chart'), {
+          type: 'bar',
+          data: {
+            labels: projectNames,
+            datasets: [{
+              label: 'Client Meetings',
+              data: clientMeetingsData,
+              backgroundColor: 'rgba(255, 206, 86, 0.6)',
+              borderColor: 'rgba(255, 206, 86, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: commonOptions
         });
       }
 
